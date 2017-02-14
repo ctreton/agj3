@@ -5,7 +5,8 @@ function preload() {
     game.load.atlas('agj3', 'assets/graphics/agj3.png', 'assets/graphics/agj3.json');
     game.load.image('background_day', 'assets/graphics/background.jpg');
     game.load.image('background_night', 'assets/graphics/background.png');
-    game.load.image('paddle', 'assets/graphics/paddle_07.png');
+    game.load.image('paddle_day', 'assets/graphics/paddle_day.png');
+    game.load.image('paddle_night', 'assets/graphics/paddle_night.png');
     game.load.image('brick_1', 'assets/graphics/brick_1.png');
     game.load.image('brick_2', 'assets/graphics/brick_2.png');
     game.load.image('brick_3', 'assets/graphics/brick_3.png');
@@ -35,6 +36,8 @@ var ballOnPaddle = true;
 var lives = 3;
 var score = 0;
 
+var day = true;
+
 var ingameMenuBackground;
 var scoreText;
 var livesText;
@@ -57,7 +60,7 @@ function create() {
 
     loadLevelOne();
 
-    paddle = game.add.sprite(game.world.centerX, GAME_HEIGHT - (FOOTER_HEIGTH + PADDLE_MARGIN_BOTTOM), 'paddle');
+    paddle = game.add.sprite(game.world.centerX, GAME_HEIGHT - (FOOTER_HEIGTH + PADDLE_MARGIN_BOTTOM), 'paddle_day');
     paddle.width = PADDLE_WIDTH;
     paddle.height = PADDLE_HEIGHT;
     paddle.anchor.setTo(MID, MID);
@@ -81,7 +84,7 @@ function create() {
 
     ball.events.onOutOfBounds.add(ballLost, this);
 
-    createIngameMenu()
+    createIngameMenu();
 
     game.input.onDown.add(releaseBall, this);
 
@@ -173,15 +176,11 @@ function ballHitBrick (_ball, _brick) {
         ball.y = paddle.y - 16;
         ball.animations.stop();
 
-        s.loadTexture('background_day');
-        ball.loadTexture('ball_day');
-        bricks.visible = true;
+        enableDay();
 
         bricks.callAll('revive');
     } else if (bricks.countLiving() == 30) {
-        s.loadTexture('background_night');
-        ball.loadTexture('ball_night');
-        bricks.visible = false;
+        enableNight();
     }
 
 }
@@ -259,6 +258,35 @@ function createIngameMenu() {
     introText = game.add.text(game.world.centerX, 400, '- click to start -', { font: "40px Arial", fill: "#ffffff", align: "center" });
     introText.anchor.setTo(0.5, 0.5);
 }
+
+function toggleNightAndDay() {
+    if (day) {
+        enableDay();
+    } else {
+        enableNight();
+    }
+}
+
+function enableDay() {
+    s.loadTexture('background_day');
+    ball.loadTexture('ball_day');
+    paddle.loadTexture('paddle_day');
+    bricks.visible = true;
+    day = true;
+}
+
+function enableNight() {
+    s.loadTexture('background_night');
+    ball.loadTexture('ball_night');
+    paddle.loadTexture('paddle_night');
+    bricks.visible = false;
+    day = false;
+}
+
+
+
+
+
 
 
 
