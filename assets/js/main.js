@@ -3,15 +3,28 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 function preload() {
 
     game.load.atlas('agj3', 'assets/graphics/agj3.png', 'assets/graphics/agj3.json');
-    game.load.image('background', 'assets/graphics/background.jpg');
+    game.load.image('background_day', 'assets/graphics/background.jpg');
+    game.load.image('background_night', 'assets/graphics/background.png');
     game.load.image('paddle', 'assets/graphics/paddle_07.png');
     game.load.image('brick_1', 'assets/graphics/brick_1.png');
     game.load.image('brick_2', 'assets/graphics/brick_2.png');
     game.load.image('brick_3', 'assets/graphics/brick_3.png');
     game.load.image('brick_4', 'assets/graphics/brick_4.png');
-    game.load.image('ball', 'assets/graphics/ball.png');
+    game.load.image('ball_day', 'assets/graphics/ball_day.png');
+    game.load.image('ball_night', 'assets/graphics/ball_night.png');
 
 }
+
+const BALL_SIZE = 16;
+const PADDLE_WIDTH = 50;
+const PADDLE_HEIGHT = 12;
+const BRICK_WIDTH = 40;
+const BRICK_HEIGHT = 20;
+const PADDLE_MARGIN_BOTTOM = 20;
+const MID = 0.5;
+const GAME_WIDTH = 800;
+const GAME_HEIGHT = 600;
+const FOOTER_HEIGTH = 50;
 
 var ball;
 var paddle;
@@ -22,6 +35,7 @@ var ballOnPaddle = true;
 var lives = 3;
 var score = 0;
 
+var ingameMenuBackground;
 var scoreText;
 var livesText;
 var introText;
@@ -32,10 +46,9 @@ function create() {
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    //  We check bounds collisions against all walls other than the bottom one
     game.physics.arcade.checkCollision.down = false;
 
-    s = game.add.tileSprite(0, 0, 800, 600, 'background');
+    s = game.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, 'background_day');
 
     bricks = game.add.group();
     bricks.enableBody = true;
@@ -44,9 +57,10 @@ function create() {
 
     loadLevelOne();
 
-    paddle = game.add.sprite(game.world.centerX, 540, 'paddle');
-    paddle.scale.setTo(0.1, 0.1);
-    paddle.anchor.setTo(0.5, 0.5);
+    paddle = game.add.sprite(game.world.centerX, GAME_HEIGHT - (FOOTER_HEIGTH + PADDLE_MARGIN_BOTTOM), 'paddle');
+    paddle.width = PADDLE_WIDTH;
+    paddle.height = PADDLE_HEIGHT;
+    paddle.anchor.setTo(MID, MID);
 
     game.physics.enable(paddle, Phaser.Physics.ARCADE);
 
@@ -54,9 +68,10 @@ function create() {
     paddle.body.bounce.set(1);
     paddle.body.immovable = true;
 
-    ball = game.add.sprite(game.world.centerX, paddle.y - 14, 'ball');
-    ball.scale.setTo(0.1, 0.1);
-    ball.anchor.set(0.5);
+    ball = game.add.sprite(game.world.centerX, paddle.y - BALL_SIZE, 'ball_day');
+    ball.width = BALL_SIZE;
+    ball.height = BALL_SIZE;
+    ball.anchor.set(MID);
     ball.checkWorldBounds = true;
 
     game.physics.enable(ball, Phaser.Physics.ARCADE);
@@ -66,10 +81,7 @@ function create() {
 
     ball.events.onOutOfBounds.add(ballLost, this);
 
-    scoreText = game.add.text(32, 550, 'score: 0', { font: "20px Arial", fill: "#ffffff", align: "left" });
-    livesText = game.add.text(680, 550, 'lives: 3', { font: "20px Arial", fill: "#ffffff", align: "left" });
-    introText = game.add.text(game.world.centerX, 400, '- click to start -', { font: "40px Arial", fill: "#ffffff", align: "center" });
-    introText.anchor.setTo(0.5, 0.5);
+    createIngameMenu()
 
     game.input.onDown.add(releaseBall, this);
 
@@ -77,23 +89,20 @@ function create() {
 
 function update () {
 
-    //  Fun, but a little sea-sick inducing :) Uncomment if you like!
-    //s.tilePosition.x += (game.input.speed.x / 2);
-
     paddle.x = game.input.x;
 
-    if (paddle.x < 25)
+    if (paddle.x < (PADDLE_WIDTH / 2))
     {
-        paddle.x = 25;
+        paddle.x = (PADDLE_WIDTH / 2);
     }
-    else if (paddle.x > game.width - 25)
+    else if (paddle.x > GAME_WIDTH - (PADDLE_WIDTH / 2))
     {
-        paddle.x = game.width - 25;
+        paddle.x = GAME_WIDTH - (PADDLE_WIDTH / 2);
     }
 
     if (ballOnPaddle)
     {
-        ball.body.x = paddle.x - 7;
+        ball.body.x = paddle.x - (BALL_SIZE / 2);
     }
     else
     {
@@ -118,7 +127,7 @@ function releaseBall () {
 function ballLost () {
 
     lives--;
-    livesText.text = 'lives: ' + lives;
+    livesText.text = 'lives\n' + lives;
 
     if (lives === 0)
     {
@@ -128,7 +137,7 @@ function ballLost () {
     {
         ballOnPaddle = true;
 
-        ball.reset(paddle.body.x, paddle.y - 14);
+        ball.reset(paddle.body.x, paddle.y - BALL_SIZE);
 
         ball.animations.stop();
     }
@@ -150,25 +159,29 @@ function ballHitBrick (_ball, _brick) {
 
     score += 10;
 
-    scoreText.text = 'score: ' + score;
+    scoreText.text = 'score\n' + score;
 
-    //  Are they any bricks left?
     if (bricks.countLiving() == 0)
     {
-        //  New level starts
         score += 1000;
-        scoreText.text = 'score: ' + score;
+        scoreText.text = 'score\n' + score;
         introText.text = '- Next Level -';
 
-        //  Let's move the ball back to the paddle
         ballOnPaddle = true;
         ball.body.velocity.set(0);
         ball.x = paddle.x + 16;
         ball.y = paddle.y - 16;
         ball.animations.stop();
 
-        //  And bring the bricks back from the dead :)
+        s.loadTexture('background_day');
+        ball.loadTexture('ball_day');
+        bricks.visible = true;
+
         bricks.callAll('revive');
+    } else if (bricks.countLiving() == 30) {
+        s.loadTexture('background_night');
+        ball.loadTexture('ball_night');
+        bricks.visible = false;
     }
 
 }
@@ -179,20 +192,16 @@ function ballHitPaddle (_ball, _paddle) {
 
     if (_ball.x < _paddle.x)
     {
-        //  Ball is on the left-hand side of the paddle
         diff = _paddle.x - _ball.x;
         _ball.body.velocity.x = (-10 * diff);
     }
     else if (_ball.x > _paddle.x)
     {
-        //  Ball is on the right-hand side of the paddle
         diff = _ball.x -_paddle.x;
         _ball.body.velocity.x = (10 * diff);
     }
     else
     {
-        //  Ball is perfectly in the middle
-        //  Add a little random X to stop it bouncing straight up!
         _ball.body.velocity.x = 2 + Math.random() * 8;
     }
 
@@ -205,15 +214,51 @@ function loadLevelOne () {
     {
         for (var x = 0; x < 15; x++)
         {
-            brick = bricks.create(120 + (x * 40), 100 + (y * 52), 'brick_' + (y+1));
-            brick.scale.setTo(0.2, 0.2);
+            brick = bricks.create(75 + (x * 44), 100 + (y * 52), 'brick_' + (y+1));
+            brick.width = BRICK_WIDTH;
+            brick.height = BRICK_HEIGHT;
             brick.body.bounce.set(1);
             brick.body.immovable = true;
         }
     }
 }
 
+function createIngameMenu() {
+    gameMenuBackground = game.add.graphics(0, 0);
+    gameMenuBackground.beginFill(0xffffff, 0.3);
+    gameMenuBackground.drawRect(0, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH, FOOTER_HEIGTH);
+    gameMenuBackground.endFill();
 
+    gameMenuBackground.lineStyle(2, 0xffffff, 1);
+    gameMenuBackground.beginFill(0xffffff, 1);
+    gameMenuBackground.moveTo(0, GAME_HEIGHT - FOOTER_HEIGTH);
+    gameMenuBackground.lineTo(GAME_WIDTH, GAME_HEIGHT - FOOTER_HEIGTH);
+    gameMenuBackground.endFill();
+
+    gameMenuBackground.lineStyle(2, 0xffffff, 1);
+    gameMenuBackground.beginFill(0xffffff, 1);
+    gameMenuBackground.moveTo(GAME_WIDTH / 4, GAME_HEIGHT - FOOTER_HEIGTH);
+    gameMenuBackground.lineTo(GAME_WIDTH / 4, GAME_HEIGHT);
+    gameMenuBackground.endFill();
+
+    gameMenuBackground.lineStyle(2, 0xffffff, 1);
+    gameMenuBackground.beginFill(0xffffff, 1);
+    gameMenuBackground.moveTo(GAME_WIDTH - (GAME_WIDTH / 4), GAME_HEIGHT - FOOTER_HEIGTH);
+    gameMenuBackground.lineTo(GAME_WIDTH - (GAME_WIDTH / 4), GAME_HEIGHT);
+    gameMenuBackground.endFill();
+
+    window.graphics = gameMenuBackground;
+
+    var ingameMenuStyle = { font: "18px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle", align: "center"};
+    scoreText = game.add.text(0, 0, 'score\n0', ingameMenuStyle);
+    scoreText.setTextBounds(0, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 4, FOOTER_HEIGTH);
+    livesText = game.add.text(0, 0, 'lives\n3', ingameMenuStyle);
+    livesText.setTextBounds(GAME_WIDTH - (GAME_WIDTH / 4), GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 4, FOOTER_HEIGTH);
+
+
+    introText = game.add.text(game.world.centerX, 400, '- click to start -', { font: "40px Arial", fill: "#ffffff", align: "center" });
+    introText.anchor.setTo(0.5, 0.5);
+}
 
 
 
