@@ -2,11 +2,12 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 
 function preload() {
 
-    game.load.atlas('agj3', 'assets/graphics/agj3.png', 'assets/graphics/agj3.json');
     game.load.image('background_day', 'assets/graphics/background.jpg');
     game.load.image('background_night', 'assets/graphics/background.png');
     game.load.image('paddle_day', 'assets/graphics/paddle_day.png');
     game.load.image('paddle_night', 'assets/graphics/paddle_night.png');
+    game.load.image('brick_0_day', 'assets/graphics/brick_0_day.png');
+    game.load.image('brick_0_night', 'assets/graphics/brick_0_night.png');
     game.load.image('brick_1', 'assets/graphics/brick_1.png');
     game.load.image('brick_2', 'assets/graphics/brick_2.png');
     game.load.image('brick_3', 'assets/graphics/brick_3.png');
@@ -30,11 +31,13 @@ const FOOTER_HEIGTH = 50;
 var ball;
 var paddle;
 var bricks;
+var bricks_0;
 
 var ballOnPaddle = true;
 
 var lives = 3;
 var score = 0;
+var level = 1;
 
 var day = true;
 
@@ -56,6 +59,10 @@ function create() {
     bricks = game.add.group();
     bricks.enableBody = true;
     bricks.physicsBodyType = Phaser.Physics.ARCADE;
+
+    bricks_0 = game.add.group();
+    bricks_0.enableBody = true;
+    bricks_0.physicsBodyType = Phaser.Physics.ARCADE;
 
 
     loadLevelOne();
@@ -111,6 +118,7 @@ function update () {
     {
         game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, this);
         game.physics.arcade.collide(ball, bricks, ballHitBrick, null, this);
+        game.physics.arcade.collide(ball, bricks_0, ballHitBrick_0, null, this);
     }
 
 }
@@ -164,9 +172,11 @@ function ballHitBrick (_ball, _brick) {
 
     scoreText.text = 'score\n' + score;
 
-    if (bricks.countLiving() == 0)
+    if (bricks.countLiving() == 0 && bricks_0.countLiving() == 0)
     {
         score += 1000;
+        level++;
+        levelText.text = 'Level ' + level;
         scoreText.text = 'score\n' + score;
         introText.text = '- Next Level -';
 
@@ -179,10 +189,14 @@ function ballHitBrick (_ball, _brick) {
         enableDay();
 
         bricks.callAll('revive');
-    } else if (bricks.countLiving() == 30) {
-        enableNight();
+        bricks_0.callAll('revive');
     }
 
+}
+
+function ballHitBrick_0 (_ball, _brick) {
+    toggleNightAndDay();
+    ballHitBrick(_ball, _brick);
 }
 
 function ballHitPaddle (_ball, _paddle) {
@@ -218,11 +232,38 @@ function loadLevelOne () {
             brick.height = BRICK_HEIGHT;
             brick.body.bounce.set(1);
             brick.body.immovable = true;
+            brick.night = false;
         }
     }
+
+    brick = bricks_0.create(427, 178, 'brick_0_day');
+    brick.width = BRICK_WIDTH;
+    brick.height = BRICK_HEIGHT;
+    brick.body.bounce.set(1);
+    brick.body.immovable = true;
+    brick.night = true;
+
+    brick = bricks_0.create(339, 178, 'brick_0_day');
+    brick.width = BRICK_WIDTH;
+    brick.height = BRICK_HEIGHT;
+    brick.body.bounce.set(1);
+    brick.body.immovable = true;
+    brick.night = true;
 }
 
 function createIngameMenu() {
+
+    var ingameMenuStyle = { font: "18px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle", align: "center"};
+    scoreText = game.add.text(0, 5, 'score\n0', ingameMenuStyle);
+    scoreText.setTextBounds(0, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 4, FOOTER_HEIGTH);
+    scoreText.lineSpacing = -10;
+    livesText = game.add.text(0, 5, 'lives\n3', ingameMenuStyle);
+    livesText.setTextBounds(GAME_WIDTH - (GAME_WIDTH / 4), GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 4, FOOTER_HEIGTH);
+    livesText.lineSpacing = -10;
+    livesText = game.add.text(0, 5, 'Level 1', ingameMenuStyle);
+    livesText.setTextBounds(GAME_WIDTH / 4, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 2, FOOTER_HEIGTH);
+    livesText.fontSize = 40;
+
     gameMenuBackground = game.add.graphics(0, 0);
     gameMenuBackground.beginFill(0xffffff, 0.3);
     gameMenuBackground.drawRect(0, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH, FOOTER_HEIGTH);
@@ -248,22 +289,15 @@ function createIngameMenu() {
 
     window.graphics = gameMenuBackground;
 
-    var ingameMenuStyle = { font: "18px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle", align: "center"};
-    scoreText = game.add.text(0, 0, 'score\n0', ingameMenuStyle);
-    scoreText.setTextBounds(0, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 4, FOOTER_HEIGTH);
-    livesText = game.add.text(0, 0, 'lives\n3', ingameMenuStyle);
-    livesText.setTextBounds(GAME_WIDTH - (GAME_WIDTH / 4), GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 4, FOOTER_HEIGTH);
-
-
     introText = game.add.text(game.world.centerX, 400, '- click to start -', { font: "40px Arial", fill: "#ffffff", align: "center" });
-    introText.anchor.setTo(0.5, 0.5);
+    introText.anchor.setTo(MID, MID);
 }
 
 function toggleNightAndDay() {
     if (day) {
-        enableDay();
-    } else {
         enableNight();
+    } else {
+        enableDay();
     }
 }
 
@@ -272,6 +306,9 @@ function enableDay() {
     ball.loadTexture('ball_day');
     paddle.loadTexture('paddle_day');
     bricks.visible = true;
+    bricks_0.forEach(function(brick_0){
+        brick_0.loadTexture('brick_0_day');
+    });
     day = true;
 }
 
@@ -280,6 +317,9 @@ function enableNight() {
     ball.loadTexture('ball_night');
     paddle.loadTexture('paddle_night');
     bricks.visible = false;
+    bricks_0.forEach(function(brick_0){
+        brick_0.loadTexture('brick_0_night');
+    });
     day = false;
 }
 
