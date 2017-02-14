@@ -44,6 +44,7 @@ var day = true;
 var ingameMenuBackground;
 var scoreText;
 var livesText;
+var levelText;
 var introText;
 
 var s;
@@ -260,9 +261,9 @@ function createIngameMenu() {
     livesText = game.add.text(0, 5, 'lives\n3', ingameMenuStyle);
     livesText.setTextBounds(GAME_WIDTH - (GAME_WIDTH / 4), GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 4, FOOTER_HEIGTH);
     livesText.lineSpacing = -10;
-    livesText = game.add.text(0, 5, 'Level 1', ingameMenuStyle);
-    livesText.setTextBounds(GAME_WIDTH / 4, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 2, FOOTER_HEIGTH);
-    livesText.fontSize = 40;
+    levelText = game.add.text(0, 5, 'Level 1', ingameMenuStyle);
+    levelText.setTextBounds(GAME_WIDTH / 4, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 2, FOOTER_HEIGTH);
+    levelText.fontSize = 40;
 
     gameMenuBackground = game.add.graphics(0, 0);
     gameMenuBackground.beginFill(0xffffff, 0.3);
