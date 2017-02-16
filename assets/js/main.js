@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'agj3game', { preload: preload, create: create, update: update });
 
 function preload() {
 
@@ -14,6 +14,9 @@ function preload() {
     game.load.image('brick_4', 'assets/graphics/brick_4.png');
     game.load.image('ball_day', 'assets/graphics/ball_day.png');
     game.load.image('ball_night', 'assets/graphics/ball_night.png');
+    game.load.audio('buttonSound', 'assets/audio/button.mp3');
+    game.load.audio('brickSound', 'assets/audio/hit_brick.mp3');
+    game.load.audio('paddleSound', 'assets/audio/hit_paddle.mp3');
 
 }
 
@@ -38,6 +41,7 @@ var ballOnPaddle = true;
 var lives = 3;
 var score = 0;
 var level = 1;
+var paused = true;
 
 var day = true;
 
@@ -47,9 +51,29 @@ var livesText;
 var levelText;
 var introText;
 
+var buttonSound;
+var brickSound;
+var paddleSound;
+
 var s;
 
 function create() {
+
+    initGame();
+
+    addPaddle();
+
+    addBall();
+
+    createIngameMenu();
+
+    loadLevelOne();
+
+    // game.input.onDown.add(releaseBall, this);
+
+}
+
+function initGame() {
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -65,8 +89,13 @@ function create() {
     bricks_0.enableBody = true;
     bricks_0.physicsBodyType = Phaser.Physics.ARCADE;
 
+    buttonSound = game.add.audio('buttonSound');
+    brickSound = game.add.audio('brickSound');
+    paddleSound = game.add.audio('paddleSound');
 
-    loadLevelOne();
+}
+
+function addPaddle() {
 
     paddle = game.add.sprite(game.world.centerX, GAME_HEIGHT - (FOOTER_HEIGTH + PADDLE_MARGIN_BOTTOM), 'paddle_day');
     paddle.width = PADDLE_WIDTH;
@@ -78,6 +107,10 @@ function create() {
     paddle.body.collideWorldBounds = true;
     paddle.body.bounce.set(1);
     paddle.body.immovable = true;
+
+}
+
+function addBall() {
 
     ball = game.add.sprite(game.world.centerX, paddle.y - BALL_SIZE, 'ball_day');
     ball.width = BALL_SIZE;
@@ -92,34 +125,32 @@ function create() {
 
     ball.events.onOutOfBounds.add(ballLost, this);
 
-    createIngameMenu();
-
-    game.input.onDown.add(releaseBall, this);
-
 }
 
 function update () {
 
-    paddle.x = game.input.x;
+    if (!paused) {
+        paddle.x = game.input.x;
 
-    if (paddle.x < (PADDLE_WIDTH / 2))
-    {
-        paddle.x = (PADDLE_WIDTH / 2);
-    }
-    else if (paddle.x > GAME_WIDTH - (PADDLE_WIDTH / 2))
-    {
-        paddle.x = GAME_WIDTH - (PADDLE_WIDTH / 2);
-    }
+        if (paddle.x < (PADDLE_WIDTH / 2))
+        {
+            paddle.x = (PADDLE_WIDTH / 2);
+        }
+        else if (paddle.x > GAME_WIDTH - (PADDLE_WIDTH / 2))
+        {
+            paddle.x = GAME_WIDTH - (PADDLE_WIDTH / 2);
+        }
 
-    if (ballOnPaddle)
-    {
-        ball.body.x = paddle.x - (BALL_SIZE / 2);
-    }
-    else
-    {
-        game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, this);
-        game.physics.arcade.collide(ball, bricks, ballHitBrick, null, this);
-        game.physics.arcade.collide(ball, bricks_0, ballHitBrick_0, null, this);
+        if (ballOnPaddle)
+        {
+            ball.body.x = paddle.x - (BALL_SIZE / 2);
+        }
+        else
+        {
+            game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, this);
+            game.physics.arcade.collide(ball, bricks, ballHitBrick, null, this);
+            game.physics.arcade.collide(ball, bricks_0, ballHitBrick_0, null, this);
+        }
     }
 
 }
@@ -169,6 +200,8 @@ function ballHitBrick (_ball, _brick) {
 
     _brick.kill();
 
+    brickSound.play();
+
     score += 10;
 
     scoreText.text = 'score\n' + score;
@@ -197,6 +230,7 @@ function ballHitBrick (_ball, _brick) {
 
 function ballHitBrick_0 (_ball, _brick) {
     toggleNightAndDay();
+    buttonSound.play();
     ballHitBrick(_ball, _brick);
 }
 
@@ -218,6 +252,8 @@ function ballHitPaddle (_ball, _paddle) {
     {
         _ball.body.velocity.x = 2 + Math.random() * 8;
     }
+
+    paddleSound.play();
 
 }
 
