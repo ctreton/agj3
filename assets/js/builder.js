@@ -122,7 +122,7 @@ function buildLevel() {
             levelBricks0.push([e.i,e.j]);
         }
     });
-    var level = {"name":"","enable":true,bricks":levelBricks,"bricks_0":levelBricks0};
+    var level = {"name":"","enable":true,"bricks":levelBricks,"bricks_0":levelBricks0};
     document.getElementById('level').value = JSON.stringify(level);
 }
 
