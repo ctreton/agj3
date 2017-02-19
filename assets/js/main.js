@@ -367,7 +367,9 @@ function enableNight() {
 function loadLevels() {
     var basicLevels = game.cache.getJSON('basicLevels');
     basicLevels["levels"].forEach(function(lvl){
-        levels.push(lvl);
+        if(lvl["enable"]){
+            levels.push(lvl);
+        }
     });
 }
 
