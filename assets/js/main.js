@@ -8,12 +8,13 @@ const MID = 0.5;
 const GAME_WIDTH = 800;
 const GAME_HEIGHT = 600;
 const FOOTER_HEIGTH = 50;
+const KEY_SENS = 8;
 
 var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'agj3game', { preload: preload, create: create, update: update });
 
 function preload() {
-    game.load.image('background_day', 'assets/graphics/background.jpg');
-    game.load.image('background_night', 'assets/graphics/background.png');
+    game.load.image('background_day', 'assets/graphics/background_day.jpg');
+    game.load.image('background_night', 'assets/graphics/background_night.jpg');
     game.load.image('paddle_day', 'assets/graphics/paddle_day.png');
     game.load.image('paddle_night', 'assets/graphics/paddle_night.png');
     game.load.image('brick_0_day', 'assets/graphics/brick_0_day.png');
@@ -42,7 +43,12 @@ var score = 0;
 var level = 0;
 var levels = [];
 var paused = false;
+var moveMouse = false;
+
 var escKey;
+var cursors;
+var spaceKey;
+
 var savedVelocityX;
 var savedVelocityY;
 var over = false;
@@ -75,9 +81,7 @@ function create() {
 
     loadNextLevel();
 
-    game.input.onDown.add(releaseBall, this);
-    escKey = game.input.keyboard.addKey(Phaser.KeyCode.ESC);
-    escKey.onDown.add(togglePauseGame, this);
+    inputEvents();
 }
 
 function initGame() {
@@ -99,6 +103,16 @@ function initGame() {
     buttonSound = game.add.audio('buttonSound');
     brickSound = game.add.audio('brickSound');
     paddleSound = game.add.audio('paddleSound');
+
+}
+
+function inputEvents(){
+    game.input.onDown.add(releaseBallByClick, this);
+    escKey = game.input.keyboard.addKey(Phaser.KeyCode.ESC);
+    escKey.onDown.add(togglePauseGame, this);
+    spaceKey = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+    spaceKey.onDown.add(releaseBallByKeyboard, this);
+    cursors = game.input.keyboard.createCursorKeys();
 
 }
 
@@ -137,7 +151,17 @@ function addBall() {
 function update () {
 
     if (!paused) {
-        paddle.x = game.input.x;
+
+        if (moveMouse){
+            paddle.x = game.input.x;
+        } else {
+            if (cursors.left.isDown){
+                paddle.x -= KEY_SENS;
+            }
+            if (cursors.right.isDown) {
+                paddle.x += KEY_SENS;
+            }
+        }
 
         if (paddle.x < (PADDLE_WIDTH / 2))
         {
@@ -186,7 +210,17 @@ function unpauseGame() {
     ball.body.velocity.x = savedVelocityX;
 }
 
-function releaseBall () {
+function releaseBallByClick() {
+    moveMouse = true;
+    releaseBall();
+}
+
+function releaseBallByKeyboard() {
+    moveMouse = false;
+    releaseBall();
+}
+
+function releaseBall() {
 
     if (ballOnPaddle && !over)
     {

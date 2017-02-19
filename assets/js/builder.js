@@ -10,7 +10,7 @@ const FOOTER_HEIGTH = 50;
 var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'agj3builder', { preload: preload, create: create, update: update });
 
 function preload() {
-    game.load.image('background', 'assets/graphics/background.jpg');
+    game.load.image('background', 'assets/graphics/background_day.jpg');
     game.load.image('brick_0', 'assets/graphics/brick_0_day.png');
     game.load.image('brick_1', 'assets/graphics/brick_1.png');
     game.load.image('brick_2', 'assets/graphics/brick_2.png');
