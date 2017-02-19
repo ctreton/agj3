@@ -41,7 +41,10 @@ var ballOnPaddle = true;
 var lives = 3;
 var score = 0;
 var level = 1;
-var paused = true;
+var paused = false;
+var escKey;
+var savedVelocityX;
+var savedVelocityY;
 
 var day = true;
 
@@ -69,8 +72,9 @@ function create() {
 
     loadLevelOne();
 
-    // game.input.onDown.add(releaseBall, this);
-
+    game.input.onDown.add(releaseBall, this);
+    escKey = game.input.keyboard.addKey(Phaser.KeyCode.ESC);
+    escKey.onDown.add(togglePauseGame, this);
 }
 
 function initGame() {
@@ -155,6 +159,30 @@ function update () {
 
 }
 
+function togglePauseGame() {
+    if (paused) {
+        unpauseGame();
+    } else {
+        pauseGame();
+    }
+}
+
+function pauseGame () {
+    paused = true;
+    introText.text = "Paused";
+    introText.visible = true;
+    savedVelocityX = ball.body.velocity.x;
+    savedVelocityY = ball.body.velocity.y;
+    ball.body.velocity.setTo(0, 0);
+}
+
+function unpauseGame() {
+    paused = false;
+    introText.visible = false;
+    ball.body.velocity.y = savedVelocityY;
+    ball.body.velocity.x = savedVelocityX;
+}
+
 function releaseBall () {
 
     if (ballOnPaddle)
@@ -222,6 +250,9 @@ function ballHitBrick (_ball, _brick) {
 
         enableDay();
 
+        bricks.removeAll();
+        bricks_0.removeAll();
+        loadLevelOne();
         bricks.callAll('revive');
         bricks_0.callAll('revive');
     }
