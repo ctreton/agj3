@@ -1,7 +1,17 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'agj3game', { preload: preload, create: create, update: update });
+const BALL_SIZE = 16;
+const PADDLE_WIDTH = 50;
+const PADDLE_HEIGHT = 12;
+const BRICK_WIDTH = 40;
+const BRICK_HEIGHT = 20;
+const PADDLE_MARGIN_BOTTOM = 20;
+const MID = 0.5;
+const GAME_WIDTH = 800;
+const GAME_HEIGHT = 600;
+const FOOTER_HEIGTH = 50;
+
+var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'agj3game', { preload: preload, create: create, update: update });
 
 function preload() {
-
     game.load.image('background_day', 'assets/graphics/background.jpg');
     game.load.image('background_night', 'assets/graphics/background.png');
     game.load.image('paddle_day', 'assets/graphics/paddle_day.png');
@@ -17,19 +27,8 @@ function preload() {
     game.load.audio('buttonSound', 'assets/audio/button.mp3');
     game.load.audio('brickSound', 'assets/audio/hit_brick.mp3');
     game.load.audio('paddleSound', 'assets/audio/hit_paddle.mp3');
-
+    game.load.json('basicLevels', 'levels/basicLevels.json');
 }
-
-const BALL_SIZE = 16;
-const PADDLE_WIDTH = 50;
-const PADDLE_HEIGHT = 12;
-const BRICK_WIDTH = 40;
-const BRICK_HEIGHT = 20;
-const PADDLE_MARGIN_BOTTOM = 20;
-const MID = 0.5;
-const GAME_WIDTH = 800;
-const GAME_HEIGHT = 600;
-const FOOTER_HEIGTH = 50;
 
 var ball;
 var paddle;
@@ -40,11 +39,13 @@ var ballOnPaddle = true;
 
 var lives = 3;
 var score = 0;
-var level = 1;
+var level = 0;
+var levels = [];
 var paused = false;
 var escKey;
 var savedVelocityX;
 var savedVelocityY;
+var over = false;
 
 var day = true;
 
@@ -70,7 +71,9 @@ function create() {
 
     createIngameMenu();
 
-    loadLevelOne();
+    loadLevels();
+
+    loadNextLevel();
 
     game.input.onDown.add(releaseBall, this);
     escKey = game.input.keyboard.addKey(Phaser.KeyCode.ESC);
@@ -185,7 +188,7 @@ function unpauseGame() {
 
 function releaseBall () {
 
-    if (ballOnPaddle)
+    if (ballOnPaddle && !over)
     {
         ballOnPaddle = false;
         ball.body.velocity.y = -300;
@@ -222,6 +225,8 @@ function gameOver () {
     introText.text = 'Game Over!';
     introText.visible = true;
 
+    over = true;
+
 }
 
 function ballHitBrick (_ball, _brick) {
@@ -238,7 +243,7 @@ function ballHitBrick (_ball, _brick) {
     {
         score += 1000;
         level++;
-        levelText.text = 'Level ' + level;
+        levelText.text = 'Level ' + (level + 1);
         scoreText.text = 'score\n' + score;
         introText.text = '- Next Level -';
 
@@ -252,7 +257,7 @@ function ballHitBrick (_ball, _brick) {
 
         bricks.removeAll();
         bricks_0.removeAll();
-        loadLevelOne();
+        loadNextLevel();
         bricks.callAll('revive');
         bricks_0.callAll('revive');
     }
@@ -286,37 +291,6 @@ function ballHitPaddle (_ball, _paddle) {
 
     paddleSound.play();
 
-}
-
-function loadLevelOne () {
-    var brick;
-
-    for (var y = 0; y < 4; y++)
-    {
-        for (var x = 0; x < 15; x++)
-        {
-            brick = bricks.create(75 + (x * 44), 100 + (y * 52), 'brick_' + (y+1));
-            brick.width = BRICK_WIDTH;
-            brick.height = BRICK_HEIGHT;
-            brick.body.bounce.set(1);
-            brick.body.immovable = true;
-            brick.night = false;
-        }
-    }
-
-    brick = bricks_0.create(427, 178, 'brick_0_day');
-    brick.width = BRICK_WIDTH;
-    brick.height = BRICK_HEIGHT;
-    brick.body.bounce.set(1);
-    brick.body.immovable = true;
-    brick.night = true;
-
-    brick = bricks_0.create(339, 178, 'brick_0_day');
-    brick.width = BRICK_WIDTH;
-    brick.height = BRICK_HEIGHT;
-    brick.body.bounce.set(1);
-    brick.body.immovable = true;
-    brick.night = true;
 }
 
 function createIngameMenu() {
@@ -391,6 +365,36 @@ function enableNight() {
     day = false;
 }
 
+function loadLevels() {
+    var basicLevels = game.cache.getJSON('basicLevels');
+    basicLevels["levels"].forEach(function(lvl){
+        levels.push(lvl);
+    });
+}
+
+function loadNextLevel() {
+    if (levels[level]) {
+        var brick;
+        levels[level]["bricks"].forEach(function(b){
+            brick = bricks.create(b[0] * BRICK_WIDTH, b[1] * BRICK_HEIGHT, 'brick_' + b[2]);
+            brick.width = BRICK_WIDTH;
+            brick.height = BRICK_HEIGHT;
+            brick.body.bounce.set(1);
+            brick.body.immovable = true;
+            brick.night = false;
+        });
+        levels[level]["bricks_0"].forEach(function(b){
+            brick = bricks_0.create(b[0] * BRICK_WIDTH, b[1] * BRICK_HEIGHT, 'brick_0_day');
+            brick.width = BRICK_WIDTH;
+            brick.height = BRICK_HEIGHT;
+            brick.body.bounce.set(1);
+            brick.body.immovable = true;
+            brick.night = true;
+        });
+    } else {
+        gameOver();
+    }
+}
 
 
 

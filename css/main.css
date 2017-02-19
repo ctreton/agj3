@@ -1,4 +1,11 @@
-canvas {
+#agj3game canvas {
   cursor: none;
+}
+canvas {
   margin: 50px auto;
+}
+textarea {
+  display: block;
+  margin: auto;
+  width: 800px;
 }
