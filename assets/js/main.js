@@ -243,7 +243,6 @@ function ballHitBrick (_ball, _brick) {
     {
         score += 1000;
         level++;
-        levelText.text = 'Level ' + (level + 1);
         scoreText.text = 'score\n' + score;
         introText.text = '- Next Level -';
 
@@ -302,7 +301,7 @@ function createIngameMenu() {
     livesText = game.add.text(0, 5, 'lives\n3', ingameMenuStyle);
     livesText.setTextBounds(GAME_WIDTH - (GAME_WIDTH / 4), GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 4, FOOTER_HEIGTH);
     livesText.lineSpacing = -10;
-    levelText = game.add.text(0, 5, 'Level 1', ingameMenuStyle);
+    levelText = game.add.text(0, 5, '', ingameMenuStyle);
     levelText.setTextBounds(GAME_WIDTH / 4, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 2, FOOTER_HEIGTH);
     levelText.fontSize = 40;
 
@@ -391,6 +390,11 @@ function loadNextLevel() {
             brick.body.immovable = true;
             brick.night = true;
         });
+        if(levels[level]["name"] && levels[level]["name"] != "") {
+            levelText.text = levels[level]["name"];
+        } else {
+            levelText.text = 'Level ' + (level + 1);
+        }
     } else {
         gameOver();
     }
