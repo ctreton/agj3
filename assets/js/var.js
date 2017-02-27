@@ -11,12 +11,15 @@ const PADDLE_MARGIN_BOTTOM = 20;
 const MID = 0.5;
 const GAME_WIDTH = 800;
 const GAME_HEIGHT = 600;
-const FOOTER_HEIGTH = 50;
+const FOOTER_HEIGHT = 50;
+const HEADER_HEIGHT = 50;
 const KEY_SENS = 8;
 const FONT = "Chewy";
 const BONUS_WIDTH  = 20;
 const BONUS_HEIGHT = 20;
 const BONUS_VELOCITY_Y = 200;
+const MENU_TEXT_COLOR = "#ffffff";
+const MENU_TEXT_COLOR_HOVER = "#626262";
 
 var ball;
 var paddle;
@@ -49,6 +52,14 @@ var paddleSound;
 var s;
 var bonuses;
 var bonusSound;
+var menu = true;
+var menuHome;
+var menuHomeBack;
+var menuHomeTitleText;
+var menuHomeNewText;
+var menuHomeResumeText;
+var menuHomeSettingText;
+var menuHomeHelpText;
 
 function preload() {
     game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');

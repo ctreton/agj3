@@ -16,4 +16,5 @@ function create() {
     loadLevels();
     loadNextLevel();
     inputEvents();
+    initMenu();
 }

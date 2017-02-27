@@ -34,7 +34,7 @@ function inputEvents(){
 
 function addPaddle() {
 
-    paddle = game.add.sprite(game.world.centerX, GAME_HEIGHT - (FOOTER_HEIGTH + PADDLE_MARGIN_BOTTOM), 'paddle_day');
+    paddle = game.add.sprite(game.world.centerX, GAME_HEIGHT - (FOOTER_HEIGHT + PADDLE_MARGIN_BOTTOM), 'paddle_day');
     paddle.width = PADDLE_WIDTH;
     paddle.height = PADDLE_HEIGHT;
     paddle.anchor.setTo(MID, MID);
@@ -69,4 +69,9 @@ function initBonuses() {
     bonuses.enableBody = true;
     bonuses.physicsBodyType = Phaser.Physics.ARCADE;
     bonusSound = game.add.audio('bonusSound');
+}
+
+function initMenu() {
+    menuHome = game.add.group();
+    createMenuHome();
 }
