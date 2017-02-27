@@ -1,6 +1,10 @@
 const BALL_SIZE = 16;
 const PADDLE_WIDTH = 50;
 const PADDLE_HEIGHT = 12;
+const LIFE_WIDTH = 18;
+const LIFE_HEIGHT = 18;
+const LIFE_INTER = 2;
+const MAX_LIVES = 9;
 const BRICK_WIDTH = 40;
 const BRICK_HEIGHT = 20;
 const PADDLE_MARGIN_BOTTOM = 20;
@@ -17,6 +21,7 @@ function preload() {
     game.load.image('background_night', 'assets/graphics/background_night.jpg');
     game.load.image('paddle_day', 'assets/graphics/paddle_day.png');
     game.load.image('paddle_night', 'assets/graphics/paddle_night.png');
+    game.load.image('life', 'assets/graphics/life.png');
     game.load.image('brick_0_day', 'assets/graphics/brick_0_day.png');
     game.load.image('brick_0_night', 'assets/graphics/brick_0_night.png');
     game.load.image('brick_1', 'assets/graphics/brick_1.png');
@@ -25,9 +30,12 @@ function preload() {
     game.load.image('brick_4', 'assets/graphics/brick_4.png');
     game.load.image('ball_day', 'assets/graphics/ball_day.png');
     game.load.image('ball_night', 'assets/graphics/ball_night.png');
+    game.load.image('bonus_0', 'assets/graphics/bonus_0.png');
+    game.load.image('bonus_1', 'assets/graphics/bonus_1.png');
     game.load.audio('buttonSound', 'assets/audio/button.mp3');
     game.load.audio('brickSound', 'assets/audio/hit_brick.mp3');
     game.load.audio('paddleSound', 'assets/audio/hit_paddle.mp3');
+    game.load.audio('bonusSound', 'assets/audio/hit_bonus.mp3');
     game.load.json('basicLevels', 'levels/basicLevels.json');
 }
 
@@ -35,6 +43,7 @@ var ball;
 var paddle;
 var bricks;
 var bricks_0;
+var livesIcons;
 
 var ballOnPaddle = true;
 
@@ -70,6 +79,8 @@ var s;
 function create() {
 
     initGame();
+
+    initBonuses();
 
     addPaddle();
 
@@ -181,6 +192,7 @@ function update () {
             game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, this);
             game.physics.arcade.collide(ball, bricks, ballHitBrick, null, this);
             game.physics.arcade.collide(ball, bricks_0, ballHitBrick_0, null, this);
+            game.physics.arcade.collide(bonuses, paddle, bonusesHitPaddle, null, this);
         }
     }
 
@@ -232,12 +244,9 @@ function releaseBall() {
 
 }
 
-function ballLost () {
+function ballLost() {
 
-    lives--;
-    livesText.text = 'lives\n' + lives;
-
-    if (lives === 0)
+    if (lives === 1)
     {
         gameOver();
     }
@@ -248,11 +257,14 @@ function ballLost () {
         ball.reset(paddle.body.x, paddle.y - BALL_SIZE);
 
         ball.animations.stop();
+
+        lives--;
+        refreshLives();
     }
 
 }
 
-function gameOver () {
+function gameOver() {
 
     ball.body.velocity.setTo(0, 0);
 
@@ -263,15 +275,14 @@ function gameOver () {
 
 }
 
-function ballHitBrick (_ball, _brick) {
+function ballHitBrick(_ball, _brick) {
 
     _brick.kill();
 
     brickSound.play();
 
     score += 10;
-
-    scoreText.text = 'score\n' + score;
+    refreshScore();
 
     if (bricks.countLiving() == 0 && bricks_0.countLiving() == 0)
     {
@@ -293,17 +304,42 @@ function ballHitBrick (_ball, _brick) {
         loadNextLevel();
         bricks.callAll('revive');
         bricks_0.callAll('revive');
+    } else {
+        brickBonus(_brick);
     }
 
 }
 
-function ballHitBrick_0 (_ball, _brick) {
+function refreshScore() {
+    scoreText.text = 'score\n' + score;
+}
+
+function refreshLives() {
+    if(lives > MAX_LIVES) {
+        lives = MAX_LIVES;
+    }
+    livesIcons.removeAll();
+    var life;
+    var paddingLeft = (GAME_WIDTH / 4 - (lives * LIFE_WIDTH + (lives - 1) * LIFE_INTER)) / 2;
+    for(var i = 0; i < lives; i++) {
+        life = livesIcons.create(
+            GAME_WIDTH - (GAME_WIDTH / 4) + paddingLeft + i * (LIFE_WIDTH + LIFE_INTER),
+            GAME_HEIGHT - ((FOOTER_HEIGTH - LIFE_HEIGHT) / 2 + LIFE_HEIGHT),
+            'life'
+        );
+        life.width = LIFE_WIDTH;
+        life.height = LIFE_HEIGHT;
+    }
+
+}
+
+function ballHitBrick_0(_ball, _brick) {
     toggleNightAndDay();
     buttonSound.play();
     ballHitBrick(_ball, _brick);
 }
 
-function ballHitPaddle (_ball, _paddle) {
+function ballHitPaddle(_ball, _paddle) {
 
     var diff = 0;
 
@@ -327,17 +363,6 @@ function ballHitPaddle (_ball, _paddle) {
 }
 
 function createIngameMenu() {
-
-    var ingameMenuStyle = { font: "18px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle", align: "center"};
-    scoreText = game.add.text(0, 5, 'score\n0', ingameMenuStyle);
-    scoreText.setTextBounds(0, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 4, FOOTER_HEIGTH);
-    scoreText.lineSpacing = -10;
-    livesText = game.add.text(0, 5, 'lives\n3', ingameMenuStyle);
-    livesText.setTextBounds(GAME_WIDTH - (GAME_WIDTH / 4), GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 4, FOOTER_HEIGTH);
-    livesText.lineSpacing = -10;
-    levelText = game.add.text(0, 5, '', ingameMenuStyle);
-    levelText.setTextBounds(GAME_WIDTH / 4, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 2, FOOTER_HEIGTH);
-    levelText.fontSize = 40;
 
     gameMenuBackground = game.add.graphics(0, 0);
     gameMenuBackground.beginFill(0xffffff, 0.3);
@@ -363,6 +388,16 @@ function createIngameMenu() {
     gameMenuBackground.endFill();
 
     window.graphics = gameMenuBackground;
+
+    var ingameMenuStyle = { font: "18px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle", align: "center"};
+    scoreText = game.add.text(0, 5, 'score\n0', ingameMenuStyle);
+    scoreText.setTextBounds(0, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 4, FOOTER_HEIGTH);
+    scoreText.lineSpacing = -10;
+    livesIcons = game.add.group();
+    refreshLives();
+    levelText = game.add.text(0, 5, '', ingameMenuStyle);
+    levelText.setTextBounds(GAME_WIDTH / 4, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 2, FOOTER_HEIGTH);
+    levelText.fontSize = 40;
 
     introText = game.add.text(game.world.centerX, 400, '- click to start -', { font: "40px Arial", fill: "#ffffff", align: "center" });
     introText.anchor.setTo(MID, MID);
@@ -417,6 +452,7 @@ function loadNextLevel() {
             brick.body.bounce.set(1);
             brick.body.immovable = true;
             brick.night = false;
+            brick.color = b[2];
         });
         levels[level]["bricks_0"].forEach(function(b){
             brick = bricks_0.create(b[0] * BRICK_WIDTH, b[1] * BRICK_HEIGHT, 'brick_0_day');
