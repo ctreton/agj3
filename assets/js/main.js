@@ -13,10 +13,19 @@ const GAME_WIDTH = 800;
 const GAME_HEIGHT = 600;
 const FOOTER_HEIGTH = 50;
 const KEY_SENS = 8;
+const FONT = "Chewy";
 
 var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'agj3game', { preload: preload, create: create, update: update });
 
+WebFontConfig = {
+    active: function() { game.time.events.add(Phaser.Timer.SECOND, changeFont, this); },
+    google: {
+      families: [FONT]
+    }
+};
+
 function preload() {
+    game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
     game.load.image('background_day', 'assets/graphics/background_day.jpg');
     game.load.image('background_night', 'assets/graphics/background_night.jpg');
     game.load.image('paddle_day', 'assets/graphics/paddle_day.png');
@@ -55,6 +64,7 @@ var paused = false;
 var moveMouse = false;
 
 var escKey;
+var pKey;
 var cursors;
 var spaceKey;
 
@@ -77,7 +87,6 @@ var paddleSound;
 var s;
 
 function create() {
-
     initGame();
 
     initBonuses();
@@ -121,6 +130,8 @@ function inputEvents(){
     game.input.onDown.add(releaseBallByClick, this);
     escKey = game.input.keyboard.addKey(Phaser.KeyCode.ESC);
     escKey.onDown.add(togglePauseGame, this);
+    pKey = game.input.keyboard.addKey(Phaser.KeyCode.P);
+    pKey.onDown.add(togglePauseGame, this);
     spaceKey = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
     spaceKey.onDown.add(releaseBallByKeyboard, this);
     cursors = game.input.keyboard.createCursorKeys();
@@ -397,10 +408,16 @@ function createIngameMenu() {
     refreshLives();
     levelText = game.add.text(0, 5, '', ingameMenuStyle);
     levelText.setTextBounds(GAME_WIDTH / 4, GAME_HEIGHT - FOOTER_HEIGTH, GAME_WIDTH / 2, FOOTER_HEIGTH);
-    levelText.fontSize = 40;
+    levelText.fontSize = 32;
 
     introText = game.add.text(game.world.centerX, 400, '- click to start -', { font: "40px Arial", fill: "#ffffff", align: "center" });
     introText.anchor.setTo(MID, MID);
+}
+
+function changeFont() {
+    introText.font = FONT;
+    levelText.font = FONT;
+    scoreText.font = FONT;
 }
 
 function toggleNightAndDay() {
