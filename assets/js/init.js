@@ -21,19 +21,18 @@ function initGame() {
 }
 
 function inputEvents(){
-    game.input.onDown.add(releaseBallByClick, this);
+    game.input.onDown.add(handleClick, this);
     escKey = game.input.keyboard.addKey(Phaser.KeyCode.ESC);
-    escKey.onDown.add(togglePauseGame, this);
+    escKey.onDown.add(handleEscape, this);
     pKey = game.input.keyboard.addKey(Phaser.KeyCode.P);
     pKey.onDown.add(togglePauseGame, this);
     spaceKey = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-    spaceKey.onDown.add(releaseBallByKeyboard, this);
+    spaceKey.onDown.add(handleSpace, this);
     cursors = game.input.keyboard.createCursorKeys();
 
 }
 
 function addPaddle() {
-
     paddle = game.add.sprite(game.world.centerX, GAME_HEIGHT - (FOOTER_HEIGHT + PADDLE_MARGIN_BOTTOM), 'paddle_day');
     paddle.width = PADDLE_WIDTH;
     paddle.height = PADDLE_HEIGHT;
@@ -44,7 +43,6 @@ function addPaddle() {
     paddle.body.collideWorldBounds = true;
     paddle.body.bounce.set(1);
     paddle.body.immovable = true;
-
 }
 
 function addBall() {
@@ -72,6 +70,11 @@ function initBonuses() {
 }
 
 function initMenu() {
+    menuTitleStyle = { font: "60px Arial", fill: MENU_TEXT_COLOR, boundsAlignH: "center", boundsAlignV: "middle", align: "center"};
+    menuOptionStyle = { font: "40px Arial", fill: MENU_TEXT_COLOR, boundsAlignH: "center", boundsAlignV: "middle", align: "center"};
     menuHome = game.add.group();
     createMenuHome();
+    menuSettings = game.add.group();
+    createMenuSettings();
+    exitSettings();
 }

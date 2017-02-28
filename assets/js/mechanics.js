@@ -1,15 +1,15 @@
 function update() {
 
-    if (!paused) {
+    if (!paused && !menu) {
 
         if (moveMouse){
             paddle.x = game.input.x;
         } else {
             if (cursors.left.isDown){
-                paddle.x -= KEY_SENS;
+                paddle.x -= KEY_SENS * sens;
             }
             if (cursors.right.isDown) {
-                paddle.x += KEY_SENS;
+                paddle.x += KEY_SENS * sens;
             }
         }
 
@@ -37,8 +37,29 @@ function update() {
 
 }
 
+function toggleMenu() {
+    if(menu) {
+        quitMenu();
+    } else {
+        printMenu();
+    }
+}
+
+function printMenu() {
+    if (!paused) {
+        pauseGame();
+    }
+    menu = true;
+    menuHome.callAll('revive');
+}
+
+function quitMenu() {
+    menu = false;
+    menuHome.callAll('kill');
+}
+
 function togglePauseGame() {
-    if (paused) {
+    if (paused && !menu) {
         unpauseGame();
     } else {
         pauseGame();
@@ -51,7 +72,7 @@ function pauseGame() {
     introText.visible = true;
     savedVelocityX = ball.body.velocity.x;
     savedVelocityY = ball.body.velocity.y;
-    bonuses.forEach(function(b){b.body.velocity.y = 0});
+    bonuses.forEach(function(b){b.body.velocity.y = 0;});
     ball.body.velocity.setTo(0, 0);
 }
 
@@ -60,45 +81,52 @@ function unpauseGame() {
     introText.visible = false;
     ball.body.velocity.y = savedVelocityY;
     ball.body.velocity.x = savedVelocityX;
-    bonuses.forEach(function(b){b.body.velocity.y = BONUS_VELOCITY_Y});
+    bonuses.forEach(function(b){b.body.velocity.y = (BONUS_VELOCITY_Y * speed);});
 }
 
-function releaseBallByClick() {
-    moveMouse = true;
-    releaseBall();
+function handleClick() {
+    if (moveMouse) {
+        if (paused && !menu) {
+            unpauseGame();
+        } else {
+            releaseBall();
+        }
+    }
 }
 
-function releaseBallByKeyboard() {
-    moveMouse = false;
-    releaseBall();
+function handleSpace() {
+    if (!moveMouse) {
+        if (paused && !menu) {
+            unpauseGame();
+        } else {
+            releaseBall();
+        }
+    }
+}
+
+function handleEscape() {
+    if (settings) {
+        exitSettings();
+    } else {
+        toggleMenu();
+    }
 }
 
 function releaseBall() {
-
-    if (ballOnPaddle && !over)
-    {
+    if (ballOnPaddle && !over && !menu) {
         ballOnPaddle = false;
-        ball.body.velocity.y = -300;
+        ball.body.velocity.y = BALL_SPEED * speed;
         ball.body.velocity.x = -75;
         introText.visible = false;
     }
-
 }
 
 function ballLost() {
-
-    if (lives === 1)
-    {
+    if (lives === 1) {
         gameOver();
-    }
-    else
-    {
+    } else {
         ballOnPaddle = true;
-
         ball.reset(paddle.body.x, paddle.y - BALL_SIZE);
-
-        ball.animations.stop();
-
         lives--;
         refreshLives();
     }
@@ -109,7 +137,7 @@ function ballHitBrick(_ball, _brick) {
 
     _brick.kill();
 
-    brickSound.play();
+    play(brickSound);
 
     score += 10;
     refreshScore();
@@ -119,7 +147,6 @@ function ballHitBrick(_ball, _brick) {
         score += 1000;
         level++;
         scoreText.text = 'score\n' + score;
-        introText.text = '- Next Level -';
 
         ballOnPaddle = true;
         ball.body.velocity.set(0);
@@ -142,7 +169,7 @@ function ballHitBrick(_ball, _brick) {
 
 function ballHitBrick_0(_ball, _brick) {
     toggleNightAndDay();
-    buttonSound.play();
+    play(buttonSound);
     ballHitBrick(_ball, _brick);
 }
 
@@ -165,7 +192,7 @@ function ballHitPaddle(_ball, _paddle) {
         _ball.body.velocity.x = 2 + Math.random() * 8;
     }
 
-    paddleSound.play();
+    play(paddleSound);
 
 }
 
@@ -259,14 +286,14 @@ function addBonus(_brick) {
     bonus.body.bounce.set(1);
     bonus.body.immovable = true;
     bonus.type = type;
-    bonus.body.velocity.y = BONUS_VELOCITY_Y;
+    bonus.body.velocity.y = BONUS_VELOCITY_Y * speed;
     bonus.events.onOutOfBounds.add(bonusLost, this);
 }
 
 function bonusesHitPaddle(_paddle, _bonus) {
     var bonusType = _bonus.type;
     _bonus.destroy();
-    bonusSound.play();
+    play(bonusSound);
     if(bonusType == 0) {
         score += 50;
         refreshScore();
@@ -285,4 +312,95 @@ function gameOver() {
     introText.text = 'Game Over!';
     introText.visible = true;
     over = true;
+}
+
+function menuNewGame() {
+    bricks.removeAll();
+    bricks_0.removeAll();
+    bonuses.removeAll();
+    level = 0;
+    lives = 3;
+    refreshLives();
+    score = 0;
+    ballOnPaddle = true;
+    enableDay();
+    introText.text = 'click to start';
+    ball.reset(paddle.body.x, paddle.y - BALL_SIZE);
+    refreshScore();
+    loadNextLevel();
+    menuHome.callAll('kill');
+    menu = false;
+    paused = false;
+    over = false;
+}
+
+function menuSettings() {
+    settings = true;
+    menuSettings.callAll('revive');
+    menuHome.callAll('kill');
+}
+
+function exitSettings() {
+    settings = false;
+    menuHome.callAll('revive');
+    menuSettings.callAll('kill');
+}
+
+function play(sound) {
+    if(!mute) {
+        sound.play();
+    }
+}
+
+function toggleSoundFX() {
+    if(mute) {
+        enableSoundFX();
+    } else {
+        disableSoundFX();
+    }
+}
+
+function enableSoundFX() {
+    menuSettingsSoundFXButtonText.text = 'On';
+    mute = false;
+}
+
+function disableSoundFX() {
+    menuSettingsSoundFXButtonText.text = 'Off';
+    mute = true;
+}
+
+function toggleControl() {
+    if(moveMouse) {
+        enableKeyboard();
+    } else {
+        enableMouse();
+    }
+}
+
+function enableKeyboard() {
+    moveMouse = false;
+    menuSettingsControlButtonText.text = "Keyboard";
+}
+
+function enableMouse() {
+    moveMouse = true;
+    menuSettingsControlButtonText.text = "Mouse";
+}
+
+function resetSettings() {
+    enableSoundFX();
+    enableMouse();
+    speed = 1;
+    menuSettingsSpeedButton.x = GAME_WIDTH / 2 + GAME_WIDTH / 8;
+    sens = 1;
+    menuSettingsSensButton.x = GAME_WIDTH / 2 + GAME_WIDTH / 8;
+}
+
+function setSpeedPosition(item) {
+    speed = ((item.x - (GAME_WIDTH / 2 + SELECTOR_WIDTH / 2)) / ((GAME_WIDTH / 4) - SELECTOR_WIDTH)) + 0.5;
+}
+
+function setSensPosition(item) {
+    sens = ((item.x - (GAME_WIDTH / 2 + SELECTOR_WIDTH / 2)) / ((GAME_WIDTH / 4) - SELECTOR_WIDTH)) + 0.5;
 }
