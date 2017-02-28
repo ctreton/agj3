@@ -32,7 +32,7 @@ var livesIcons;
 var ballOnPaddle = true;
 var lives = 3;
 var score = 0;
-var level = 2;
+var level = 0;
 var levels = [];
 var speed = 1;
 var sens = 1;

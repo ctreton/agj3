@@ -135,11 +135,11 @@ function ballLost() {
 
 function ballHitBrick(_ball, _brick) {
 
+    score += 10 * _brick.color;
     _brick.kill();
 
     play(brickSound);
 
-    score += 10;
     refreshScore();
 
     if (bricks.countLiving() == 0 && bricks_0.countLiving() == 0)
@@ -254,6 +254,7 @@ function loadNextLevel() {
             brick.body.bounce.set(1);
             brick.body.immovable = true;
             brick.night = true;
+            brick.color = 10;
         });
         if(levels[level]["name"] && levels[level]["name"] != "") {
             levelText.text = levels[level]["name"];
@@ -399,6 +400,9 @@ function resetSettings() {
 
 function setSpeedPosition(item) {
     speed = ((item.x - (GAME_WIDTH / 2 + SELECTOR_WIDTH / 2 + 100)) / ((GAME_WIDTH / 4) - SELECTOR_WIDTH) + 100) + 0.5 - 100;
+    if(savedVelocityY) {
+        savedVelocityY = speed * BALL_SPEED;
+    }
 }
 
 function setSensPosition(item) {
