@@ -56,6 +56,7 @@ function changeFont() {
     menuSettingsControlButtonText.font = FONT;
     menuSettingsResetButtonText.font = FONT;
     menuSettingsKeySensButtonText.font = FONT;
+    menuSettingsExitText.font = FONT;
 }
 
 function refreshScore() {
@@ -126,6 +127,7 @@ function createMenuSettings() {
     var optionHeight = (GAME_HEIGHT - (HEADER_HEIGHT + FOOTER_HEIGHT)) / 6;
 
     menuSettingsTitleText = game.add.text(0, 0, 'Settings', menuTitleStyle, menuSettings);
+    menuSettingsExitText = game.add.text(0, 0, 'X', menuTitleStyle, menuSettings);
     menuSettingsSoundFXText = game.add.text(0, 0, 'Sound effects', menuOptionStyle, menuSettings);
     menuSettingsSoundFXButtonText = game.add.text(0, 0, 'On', menuOptionStyle, menuSettings);
     menuSettingsSpeedText = game.add.text(0, 0, 'Speed', menuOptionStyle, menuSettings);
@@ -135,13 +137,17 @@ function createMenuSettings() {
     menuSettingsResetButtonText = game.add.text(0, 0, 'Reset settings', menuOptionStyle, menuSettings);
 
     menuSettingsTitleText.setTextBounds(0, HEADER_HEIGHT + optionHeight * 0, GAME_WIDTH, optionHeight);
+    menuSettingsExitText.setTextBounds(20, 20, 50, 50);
+    menuSettingsExitText.fontSize = 50;
+    menuSettingsExitText.inputEnabled = true;
+    menuSettingsExitText.events.onInputDown.add(exitSettings, this);
     menuSettingsSoundFXText.setTextBounds(GAME_WIDTH / 4 - 100, HEADER_HEIGHT + optionHeight * 1, GAME_WIDTH / 4, optionHeight);
-    menuSettingsSoundFXButtonText.setTextBounds(GAME_WIDTH / 2, HEADER_HEIGHT + optionHeight * 1, GAME_WIDTH / 4, optionHeight);
+    menuSettingsSoundFXButtonText.setTextBounds(GAME_WIDTH / 2 + 100, HEADER_HEIGHT + optionHeight * 1, GAME_WIDTH / 4, optionHeight);
     menuSettingsSoundFXButtonText.inputEnabled = true;
     menuSettingsSoundFXButtonText.events.onInputDown.add(toggleSoundFX, this);
     menuSettingsSpeedText.setTextBounds(GAME_WIDTH / 4 - 100, HEADER_HEIGHT + optionHeight * 2, GAME_WIDTH / 4, optionHeight);
     menuSettingsControlText.setTextBounds(GAME_WIDTH / 4 - 100, HEADER_HEIGHT + optionHeight * 3, GAME_WIDTH / 4, optionHeight);
-    menuSettingsControlButtonText.setTextBounds(GAME_WIDTH / 2, HEADER_HEIGHT + optionHeight * 3, GAME_WIDTH / 4, optionHeight);
+    menuSettingsControlButtonText.setTextBounds(GAME_WIDTH / 2 + 100, HEADER_HEIGHT + optionHeight * 3, GAME_WIDTH / 4, optionHeight);
     menuSettingsControlButtonText.inputEnabled = true;
     menuSettingsControlButtonText.events.onInputDown.add(toggleControl, this);
     menuSettingsKeySensButtonText.setTextBounds(GAME_WIDTH / 4 - 100, HEADER_HEIGHT + optionHeight * 4, GAME_WIDTH / 4, optionHeight);
@@ -150,46 +156,46 @@ function createMenuSettings() {
     menuSettingsResetButtonText.events.onInputDown.add(resetSettings, this);
 
     var positionSpeed = ((speed - 0.5) * ((GAME_WIDTH / 4) - SELECTOR_WIDTH));
-    menuSettingsSpeedButton = menuSettings.create(GAME_WIDTH / 2 + positionSpeed + SELECTOR_WIDTH / 2, (HEADER_HEIGHT + optionHeight * 2) + (optionHeight / 2), 'selector');
+    menuSettingsSpeedButton = menuSettings.create(GAME_WIDTH / 2 + positionSpeed + SELECTOR_WIDTH / 2 + 100, (HEADER_HEIGHT + optionHeight * 2) + (optionHeight / 2), 'selector');
     menuSettingsSpeedButton.height = SELECTOR_HEIGHT;
     menuSettingsSpeedButton.width = SELECTOR_WIDTH;
     menuSettingsSpeedButton.inputEnabled = true;
     menuSettingsSpeedButton.anchor.setTo(MID,MID);
     menuSettingsSpeedButton.input.enableDrag();
     menuSettingsSpeedButton.input.allowVerticalDrag = false;
-    menuSettingsSpeedButton.input.boundsRect = new Phaser.Rectangle(GAME_WIDTH / 2, HEADER_HEIGHT + optionHeight * 2, GAME_WIDTH / 4, optionHeight);
+    menuSettingsSpeedButton.input.boundsRect = new Phaser.Rectangle(GAME_WIDTH / 2 + 100, HEADER_HEIGHT + optionHeight * 2, GAME_WIDTH / 4, optionHeight);
     menuSettingsSpeedButton.events.onDragStop.add(setSpeedPosition, this);
 
     menuSettingsSpeedButtonLine = game.add.graphics(0, 0, menuSettings);
     menuSettingsSpeedButtonLine.lineStyle(2, 0x626262, 1);
     menuSettingsSpeedButtonLine.beginFill(0x626262, 1);
-    menuSettingsSpeedButtonLine.moveTo(GAME_WIDTH / 2 + SELECTOR_WIDTH / 2, HEADER_HEIGHT + optionHeight * 2 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
-    menuSettingsSpeedButtonLine.lineTo(GAME_WIDTH / 4 * 3 - SELECTOR_WIDTH / 2, HEADER_HEIGHT + optionHeight * 2 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
+    menuSettingsSpeedButtonLine.moveTo(GAME_WIDTH / 2 + SELECTOR_WIDTH / 2 + 100, HEADER_HEIGHT + optionHeight * 2 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
+    menuSettingsSpeedButtonLine.lineTo(GAME_WIDTH / 4 * 3 - SELECTOR_WIDTH / 2 + 100, HEADER_HEIGHT + optionHeight * 2 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
     menuSettingsSpeedButtonLine.endFill();
     menuSettingsSpeedButtonLine.beginFill(0x626262, 1);
-    menuSettingsSpeedButtonLine.moveTo(GAME_WIDTH / 2 + GAME_WIDTH / 8, HEADER_HEIGHT + optionHeight * 2 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
-    menuSettingsSpeedButtonLine.lineTo(GAME_WIDTH / 2 + GAME_WIDTH / 8, (HEADER_HEIGHT + optionHeight * 2 + (optionHeight / 2 - SELECTOR_HEIGHT / 2)) - 5);
+    menuSettingsSpeedButtonLine.moveTo(GAME_WIDTH / 2 + GAME_WIDTH / 8 + 100, HEADER_HEIGHT + optionHeight * 2 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
+    menuSettingsSpeedButtonLine.lineTo(GAME_WIDTH / 2 + GAME_WIDTH / 8 + 100, (HEADER_HEIGHT + optionHeight * 2 + (optionHeight / 2 - SELECTOR_HEIGHT / 2)) - 5);
     menuSettingsSpeedButtonLine.endFill();
 
     var positionSens = ((speed - 0.5) * ((GAME_WIDTH / 4) - SELECTOR_WIDTH));
-    menuSettingsSensButton = menuSettings.create(GAME_WIDTH / 2 + positionSens + SELECTOR_WIDTH / 2, (HEADER_HEIGHT + optionHeight * 4) + (optionHeight / 2), 'selector');
+    menuSettingsSensButton = menuSettings.create(GAME_WIDTH / 2 + positionSens + SELECTOR_WIDTH / 2 + 100, (HEADER_HEIGHT + optionHeight * 4) + (optionHeight / 2), 'selector');
     menuSettingsSensButton.height = SELECTOR_HEIGHT;
     menuSettingsSensButton.width = SELECTOR_WIDTH;
     menuSettingsSensButton.inputEnabled = true;
     menuSettingsSensButton.anchor.setTo(MID,MID);
     menuSettingsSensButton.input.enableDrag();
     menuSettingsSensButton.input.allowVerticalDrag = false;
-    menuSettingsSensButton.input.boundsRect = new Phaser.Rectangle(GAME_WIDTH / 2, HEADER_HEIGHT + optionHeight * 4, GAME_WIDTH / 4, optionHeight);
+    menuSettingsSensButton.input.boundsRect = new Phaser.Rectangle(GAME_WIDTH / 2 + 100, HEADER_HEIGHT + optionHeight * 4, GAME_WIDTH / 4, optionHeight);
     menuSettingsSensButton.events.onDragStop.add(setSensPosition, this);
 
     menuSettingsSensButtonLine = game.add.graphics(0, 0, menuSettings);
     menuSettingsSensButtonLine.lineStyle(2, 0x626262, 1);
     menuSettingsSensButtonLine.beginFill(0x626262, 1);
-    menuSettingsSensButtonLine.moveTo(GAME_WIDTH / 2 + SELECTOR_WIDTH / 2, HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
-    menuSettingsSensButtonLine.lineTo(GAME_WIDTH / 4 * 3 - SELECTOR_WIDTH / 2, HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
+    menuSettingsSensButtonLine.moveTo(GAME_WIDTH / 2 + SELECTOR_WIDTH / 2 + 100, HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
+    menuSettingsSensButtonLine.lineTo(GAME_WIDTH / 4 * 3 - SELECTOR_WIDTH / 2 + 100, HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
     menuSettingsSensButtonLine.endFill();
     menuSettingsSensButtonLine.beginFill(0x626262, 1);
-    menuSettingsSensButtonLine.moveTo(GAME_WIDTH / 2 + GAME_WIDTH / 8, HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
-    menuSettingsSensButtonLine.lineTo(GAME_WIDTH / 2 + GAME_WIDTH / 8, (HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2)) - 5);
+    menuSettingsSensButtonLine.moveTo(GAME_WIDTH / 2 + GAME_WIDTH / 8 + 100, HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
+    menuSettingsSensButtonLine.lineTo(GAME_WIDTH / 2 + GAME_WIDTH / 8 + 100, (HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2)) - 5);
     menuSettingsSensButtonLine.endFill();
 }

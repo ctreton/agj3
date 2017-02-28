@@ -392,15 +392,15 @@ function resetSettings() {
     enableSoundFX();
     enableMouse();
     speed = 1;
-    menuSettingsSpeedButton.x = GAME_WIDTH / 2 + GAME_WIDTH / 8;
+    menuSettingsSpeedButton.x = GAME_WIDTH / 2 + GAME_WIDTH / 8 + 100;
     sens = 1;
-    menuSettingsSensButton.x = GAME_WIDTH / 2 + GAME_WIDTH / 8;
+    menuSettingsSensButton.x = GAME_WIDTH / 2 + GAME_WIDTH / 8 + 100;
 }
 
 function setSpeedPosition(item) {
-    speed = ((item.x - (GAME_WIDTH / 2 + SELECTOR_WIDTH / 2)) / ((GAME_WIDTH / 4) - SELECTOR_WIDTH)) + 0.5;
+    speed = ((item.x - (GAME_WIDTH / 2 + SELECTOR_WIDTH / 2 + 100)) / ((GAME_WIDTH / 4) - SELECTOR_WIDTH) + 100) + 0.5 - 100;
 }
 
 function setSensPosition(item) {
-    sens = ((item.x - (GAME_WIDTH / 2 + SELECTOR_WIDTH / 2)) / ((GAME_WIDTH / 4) - SELECTOR_WIDTH)) + 0.5;
+    sens = ((item.x - (GAME_WIDTH / 2 + SELECTOR_WIDTH / 2 + 100)) / ((GAME_WIDTH / 4) - SELECTOR_WIDTH) + 100) + 0.5 - 100;
 }
