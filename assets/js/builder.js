@@ -5,7 +5,7 @@ const GAME_WIDTH = 800;
 const GAME_HEIGHT = 600;
 const GRID_WIDTH = 800;
 const GRID_HEIGHT = 400;
-const FOOTER_HEIGTH = 50;
+const FOOTER_HEIGHT = 50;
 
 var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'agj3builder', { preload: preload, create: create, update: update });
 
@@ -76,29 +76,29 @@ function createBricks() {
 function createSelectors() {
     selectors = game.add.group();
     for (var i=0;i<5;i++) {
-        selector = selectors.create((GAME_WIDTH - (50+2*BRICK_WIDTH)*2) / 6 * (i + 1) + (50+2*BRICK_WIDTH) - BRICK_WIDTH / 2,GAME_HEIGHT - FOOTER_HEIGTH, 'brick_' + i);
+        selector = selectors.create((GAME_WIDTH - (50+2*BRICK_WIDTH)*2) / 6 * (i + 1) + (50+2*BRICK_WIDTH) - BRICK_WIDTH / 2,GAME_HEIGHT - FOOTER_HEIGHT, 'brick_' + i);
         selector.width = BRICK_WIDTH;
         selector.height = BRICK_HEIGHT;
         selector.inputEnabled = true;
         selector.type = i;
         selector.events.onInputDown.add(function(s){currentSelector = s.type;}, this);
     }
-    go = game.add.sprite(GAME_WIDTH-(50+2*BRICK_WIDTH), GAME_HEIGHT - (FOOTER_HEIGTH + BRICK_HEIGHT / 2), 'button_g');
+    go = game.add.sprite(GAME_WIDTH-(50+2*BRICK_WIDTH), GAME_HEIGHT - (FOOTER_HEIGHT + BRICK_HEIGHT / 2), 'button_g');
     go.width = BRICK_WIDTH * 2;
     go.height = BRICK_HEIGHT * 2;
     go.inputEnabled = true;
     go.events.onInputDown.add(buildLevel, this);
     var buttonStyle = { font: "22px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle", align: "center"};
     goText = game.add.text(0, 2, 'Go', buttonStyle);
-    goText.setTextBounds(GAME_WIDTH-(50+2*BRICK_WIDTH), GAME_HEIGHT - (FOOTER_HEIGTH + BRICK_HEIGHT / 2), BRICK_WIDTH * 2, BRICK_HEIGHT * 2);
+    goText.setTextBounds(GAME_WIDTH-(50+2*BRICK_WIDTH), GAME_HEIGHT - (FOOTER_HEIGHT + BRICK_HEIGHT / 2), BRICK_WIDTH * 2, BRICK_HEIGHT * 2);
 
-    reset = game.add.sprite(50, GAME_HEIGHT - (FOOTER_HEIGTH + BRICK_HEIGHT / 2), 'button_r');
+    reset = game.add.sprite(50, GAME_HEIGHT - (FOOTER_HEIGHT + BRICK_HEIGHT / 2), 'button_r');
     reset.width = BRICK_WIDTH * 2;
     reset.height = BRICK_HEIGHT * 2;
     reset.inputEnabled = true;
     reset.events.onInputDown.add(resetGrid, this);
     resetText = game.add.text(0, 2, 'Reset', buttonStyle);
-    resetText.setTextBounds(50, GAME_HEIGHT - (FOOTER_HEIGTH + BRICK_HEIGHT / 2), BRICK_WIDTH * 2, BRICK_HEIGHT * 2);
+    resetText.setTextBounds(50, GAME_HEIGHT - (FOOTER_HEIGHT + BRICK_HEIGHT / 2), BRICK_WIDTH * 2, BRICK_HEIGHT * 2);
 }
 
 function clickOnBrick(brick){
