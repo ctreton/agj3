@@ -64,13 +64,13 @@ function refreshScore() {
 }
 
 function refreshLives() {
-    if(lives > MAX_LIVES) {
+    if (lives > MAX_LIVES) {
         lives = MAX_LIVES;
     }
     livesIcons.removeAll();
     var life;
     var paddingLeft = (GAME_WIDTH / 4 - (lives * LIFE_WIDTH + (lives - 1) * LIFE_INTER)) / 2;
-    for(var i = 0; i < lives; i++) {
+    for (var i = 0; i < lives; i++) {
         life = livesIcons.create(
             GAME_WIDTH - (GAME_WIDTH / 4) + paddingLeft + i * (LIFE_WIDTH + LIFE_INTER),
             GAME_HEIGHT - ((FOOTER_HEIGHT - LIFE_HEIGHT) / 2 + LIFE_HEIGHT),
@@ -79,12 +79,10 @@ function refreshLives() {
         life.width = LIFE_WIDTH;
         life.height = LIFE_HEIGHT;
     }
-
 }
 
 function createMenuHome() {
     menuHomeBack = menuHome.create(0, 0, 'background_day');
-
     menuHomeTitleText = game.add.text(0, 0, 'Akeneo Game Jam #3', menuTitleStyle, menuHome);
     menuHomeNewText = game.add.text(0, 0, 'New game', menuOptionStyle, menuHome);
     menuHomeResumeText = game.add.text(0, 0, 'Resume game', menuOptionStyle, menuHome);
