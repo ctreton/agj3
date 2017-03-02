@@ -60,9 +60,13 @@ function initBonuses() {
 function initMenu() {
     menuTitleStyle = { font: "60px Arial", fill: MENU_TEXT_COLOR, boundsAlignH: "center", boundsAlignV: "middle", align: "center"};
     menuOptionStyle = { font: "40px Arial", fill: MENU_TEXT_COLOR, boundsAlignH: "center", boundsAlignV: "middle", align: "center"};
+    menuTextStyle = { font: "20px Arial", fill: MENU_TEXT_COLOR, boundsAlignH: "center", boundsAlignV: "middle", align: "center"};
     menuHome = game.add.group();
     createMenuHome();
     menuSettings = game.add.group();
     createMenuSettings();
     exitSettings();
+    menuHelp = game.add.group();
+    createMenuHelp();
+    exitHelp();
 }

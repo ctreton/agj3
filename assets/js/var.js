@@ -60,8 +60,10 @@ var bonuses;
 var bonusSound;
 var menu = true;
 var settings = false;
+var help = false;
 var menuHome;
 var menuSettings;
+var menuHelp;
 var menuTitleStyle;
 var menuOptionStyle;
 var menuHomeBack;
@@ -81,6 +83,9 @@ var menuSettingsControlButtonText;
 var menuSettingsSensButton;
 var menuSettingsKeySensButtonText;
 var menuSettingsResetButtonText;
+var menuHelpTitleText;
+var menuHelpExitText;
+var menuHelpGameplayText;
 
 function preload() {
     game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');

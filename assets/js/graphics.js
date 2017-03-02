@@ -57,6 +57,9 @@ function changeFont() {
     menuSettingsResetButtonText.font = FONT;
     menuSettingsKeySensButtonText.font = FONT;
     menuSettingsExitText.font = FONT;
+    menuHelpTitleText.font = FONT;
+    menuHelpExitText.font = FONT;
+    menuHelpGameplayText.font = FONT;
 }
 
 function refreshScore() {
@@ -109,6 +112,7 @@ function createMenuHome() {
     menuHomeHelpText.inputEnabled = true;
     menuHomeHelpText.events.onInputOver.add(menuTextHoverIn, this);
     menuHomeHelpText.events.onInputOut.add(menuTextHoverOut, this);
+    menuHomeHelpText.events.onInputDown.add(menuHelp, this);
 }
 
 function menuTextHoverIn(_text) {
@@ -196,4 +200,23 @@ function createMenuSettings() {
     menuSettingsSensButtonLine.moveTo(GAME_WIDTH / 2 + GAME_WIDTH / 8 + 100, HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
     menuSettingsSensButtonLine.lineTo(GAME_WIDTH / 2 + GAME_WIDTH / 8 + 100, (HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2)) - 5);
     menuSettingsSensButtonLine.endFill();
+}
+
+function createMenuHelp() {
+    menuHelpBack = menuHelp.create(0, 0, 'background_day');
+
+    var optionHeight = (GAME_HEIGHT - (HEADER_HEIGHT + FOOTER_HEIGHT)) / 6;
+
+    menuHelpTitleText = game.add.text(0, 0, 'Help', menuTitleStyle, menuHelp);
+    menuHelpExitText = game.add.text(0, 0, 'X', menuTitleStyle, menuHelp);
+    menuHelpGameplayText = game.add.text(0, 0, 'Phasellus enim quam, posuere quis convallis non, mattis et justo. Quisque sapien mi, convallis non ante ac, blandit pretium dolor. Duis vestibulum egestas mi, lobortis mattis tellus scelerisque sit amet. Mauris condimentum risus ut velit blandit pharetra. Morbi in ante at ligula mattis laoreet vel elementum neque. Donec rutrum luctus ante sed fermentum. Donec ac neque elit.', menuTextStyle, menuHelp);
+
+    menuHelpTitleText.setTextBounds(0, HEADER_HEIGHT + optionHeight * 0, GAME_WIDTH, optionHeight);
+    menuHelpExitText.setTextBounds(20, 20, 50, 50);
+    menuHelpExitText.fontSize = 50;
+    menuHelpExitText.inputEnabled = true;
+    menuHelpExitText.events.onInputDown.add(exitHelp, this);
+    menuHelpGameplayText.setTextBounds(0, HEADER_HEIGHT + optionHeight * 1, GAME_WIDTH, optionHeight * 2);
+    menuHelpGameplayText.wordWrap = true;
+    menuHelpGameplayText.wordWrapWidth = GAME_WIDTH - 50;
 }

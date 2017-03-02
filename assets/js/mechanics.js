@@ -378,3 +378,15 @@ function setSpeedPosition(item) {
 function setSensPosition(item) {
     sens = ((item.x - (GAME_WIDTH / 2 + SELECTOR_WIDTH / 2 + 100)) / ((GAME_WIDTH / 4) - SELECTOR_WIDTH) + 100) + 0.5 - 100;
 }
+
+function menuHelp() {
+    help = true;
+    menuHelp.callAll('revive');
+    menuHome.callAll('kill');
+}
+
+function exitHelp() {
+    help = false;
+    menuHome.callAll('revive');
+    menuHelp.callAll('kill');
+}
