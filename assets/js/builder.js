@@ -37,29 +37,25 @@ function create() {
 }
 
 function update() {
-
 }
 
 function drawGrid() {
     grid = game.add.graphics(0, 0);
-
     grid.lineStyle(1, 0xffffff, 1);
     grid.beginFill(0xffffff, 1);
-
-    for(var i = 1; i < 21; i++) {
+    for (var i = 1; i < 21; i++) {
         grid.moveTo(BRICK_WIDTH * i, 0);
         grid.lineTo(BRICK_WIDTH * i, GRID_HEIGHT);
         grid.moveTo(0, BRICK_HEIGHT * i, 0);
         grid.lineTo(GRID_WIDTH, BRICK_HEIGHT * i);
     }
-
     grid.endFill();
 }
 
 function createBricks() {
     bricks = game.add.group();
-    for(var i = 0; i < 20; i++){
-        for(var j = 0; j < 20; j++){
+    for (var i = 0; i < 20; i++) {
+        for (var j = 0; j < 20; j++) {
             brick = bricks.create(i * BRICK_WIDTH, j * BRICK_HEIGHT, 'brick_1');
             brick.width = BRICK_WIDTH;
             brick.height = BRICK_HEIGHT;
@@ -75,7 +71,7 @@ function createBricks() {
 
 function createSelectors() {
     selectors = game.add.group();
-    for (var i=0;i<5;i++) {
+    for (var i = 0; i < 5; i++) {
         selector = selectors.create((GAME_WIDTH - (50+2*BRICK_WIDTH)*2) / 6 * (i + 1) + (50+2*BRICK_WIDTH) - BRICK_WIDTH / 2,GAME_HEIGHT - FOOTER_HEIGHT, 'brick_' + i);
         selector.width = BRICK_WIDTH;
         selector.height = BRICK_HEIGHT;
@@ -101,8 +97,8 @@ function createSelectors() {
     resetText.setTextBounds(50, GAME_HEIGHT - (FOOTER_HEIGHT + BRICK_HEIGHT / 2), BRICK_WIDTH * 2, BRICK_HEIGHT * 2);
 }
 
-function clickOnBrick(brick){
-    if(currentSelector != brick.type) {
+function clickOnBrick(brick) {
+    if(currentSelector !== brick.type) {
         brick.alpha = 1;
         brick.loadTexture("brick_" + currentSelector);
         brick.type = currentSelector;
@@ -115,19 +111,19 @@ function clickOnBrick(brick){
 function buildLevel() {
     var levelBricks = [];
     var levelBricks0 = [];
-    bricks.forEach(function(e){
-        if (e.type > 0){
+    bricks.forEach(function(e) {
+        if (e.type > 0) {
             levelBricks.push([e.i,e.j,e.type]);
-        } else if (e.type == 0) {
+        } else if (e.type === 0) {
             levelBricks0.push([e.i,e.j]);
         }
     });
-    var level = {"name":"","enable":true,"bricks":levelBricks,"bricks_0":levelBricks0};
+    var level = { "name" : "", "enable" : true, "bricks" : levelBricks, "bricks_0" : levelBricks0 };
     document.getElementById('level').value = JSON.stringify(level);
 }
 
-function resetGrid(){
-    bricks.forEach(function(b){
+function resetGrid() {
+    bricks.forEach(function(b) {
         b.alpha = 0;
         b.type = -1;
     });
