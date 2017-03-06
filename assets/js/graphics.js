@@ -60,6 +60,15 @@ function changeFont() {
     menuHelpTitleText.font = FONT;
     menuHelpExitText.font = FONT;
     menuHelpGameplayText.font = FONT;
+    menuHelpBricksText.font = FONT;
+    menuHelpBrick1Text.font = FONT;
+    menuHelpBrick2Text.font = FONT;
+    menuHelpBrick3Text.font = FONT;
+    menuHelpBrick4Text.font = FONT;
+    menuHelpBrick0Text.font = FONT;
+    menuHelpBonusText.font = FONT;
+    menuHelpCoinText.font = FONT;
+    menuHelpLifeText.font = FONT;
 }
 
 function refreshScore() {
@@ -143,6 +152,8 @@ function createMenuSettings() {
     menuSettingsExitText.fontSize = 50;
     menuSettingsExitText.inputEnabled = true;
     menuSettingsExitText.events.onInputDown.add(exitSettings, this);
+    menuSettingsExitText.events.onInputOver.add(menuTextHoverIn, this);
+    menuSettingsExitText.events.onInputOut.add(menuTextHoverOut, this);
     menuSettingsSoundFXText.setTextBounds(GAME_WIDTH / 4 - 100, HEADER_HEIGHT + optionHeight * 1, GAME_WIDTH / 4, optionHeight);
     menuSettingsSoundFXButtonText.setTextBounds(GAME_WIDTH / 2 + 100, HEADER_HEIGHT + optionHeight * 1, GAME_WIDTH / 4, optionHeight);
     menuSettingsSoundFXButtonText.inputEnabled = true;
@@ -156,6 +167,8 @@ function createMenuSettings() {
     menuSettingsResetButtonText.setTextBounds(0, HEADER_HEIGHT + optionHeight * 5, GAME_WIDTH, optionHeight);
     menuSettingsResetButtonText.inputEnabled = true;
     menuSettingsResetButtonText.events.onInputDown.add(resetSettings, this);
+    menuSettingsResetButtonText.events.onInputOver.add(menuTextHoverIn, this);
+    menuSettingsResetButtonText.events.onInputOut.add(menuTextHoverOut, this);
 
     var positionSpeed = ((speed - 0.5) * ((GAME_WIDTH / 4) - SELECTOR_WIDTH));
     menuSettingsSpeedButton = menuSettings.create(GAME_WIDTH / 2 + positionSpeed + SELECTOR_WIDTH / 2 + 100, (HEADER_HEIGHT + optionHeight * 2) + (optionHeight / 2), 'selector');
@@ -205,18 +218,65 @@ function createMenuSettings() {
 function createMenuHelp() {
     menuHelpBack = menuHelp.create(0, 0, 'background_day');
 
-    var optionHeight = (GAME_HEIGHT - (HEADER_HEIGHT + FOOTER_HEIGHT)) / 6;
+    var optionHeight = (GAME_HEIGHT - (HEADER_HEIGHT + FOOTER_HEIGHT)) / 12;
 
     menuHelpTitleText = game.add.text(0, 0, 'Help', menuTitleStyle, menuHelp);
     menuHelpExitText = game.add.text(0, 0, 'X', menuTitleStyle, menuHelp);
-    menuHelpGameplayText = game.add.text(0, 0, 'Phasellus enim quam, posuere quis convallis non, mattis et justo. Quisque sapien mi, convallis non ante ac, blandit pretium dolor. Duis vestibulum egestas mi, lobortis mattis tellus scelerisque sit amet. Mauris condimentum risus ut velit blandit pharetra. Morbi in ante at ligula mattis laoreet vel elementum neque. Donec rutrum luctus ante sed fermentum. Donec ac neque elit.', menuTextStyle, menuHelp);
+    menuHelpGameplayText = game.add.text(0, 0, 'This game is a classic breakout-like game, with the paddle and the ball you have to destroy all the bricks on the screen to pass the level. The difference to classic games is in the day/night mode, if you destroy a switch brick (black or phosphorescent), you switch the mode. Day mode is the normal mode, in night mode you’ll see only switch bricks, bonuses, the ball and the paddle in phosphorescent color.', menuTextStyle, menuHelp);
 
-    menuHelpTitleText.setTextBounds(0, HEADER_HEIGHT + optionHeight * 0, GAME_WIDTH, optionHeight);
+    menuHelpBricksText = game.add.text(0, 0, 'Bricks', menuOptionStyle, menuHelp);
+    menuHelpBrick1Text = game.add.text(0, 3, '10pts', menuHelpTextStyle, menuHelp);
+    menuHelpBrick2Text = game.add.text(0, 3, '20pts', menuHelpTextStyle, menuHelp);
+    menuHelpBrick3Text = game.add.text(0, 3, '30pts', menuHelpTextStyle, menuHelp);
+    menuHelpBrick4Text = game.add.text(0, 3, '40pts', menuHelpTextStyle, menuHelp);
+    menuHelpBrick0Text = game.add.text(0, 3, '100pts', menuHelpTextStyle, menuHelp);
+    menuHelpBonusText  = game.add.text(0, 0, 'Bonus', menuOptionStyle, menuHelp);
+    menuHelpCoinText   = game.add.text(0, 3, '50pts', menuHelpTextStyle, menuHelp);
+    menuHelpLifeText   = game.add.text(0, 3, '+1 life', menuHelpTextStyle, menuHelp);
+
+    menuHelpTitleText.setTextBounds(0, HEADER_HEIGHT + optionHeight * 0, GAME_WIDTH, optionHeight * 2);
     menuHelpExitText.setTextBounds(20, 20, 50, 50);
     menuHelpExitText.fontSize = 50;
     menuHelpExitText.inputEnabled = true;
     menuHelpExitText.events.onInputDown.add(exitHelp, this);
-    menuHelpGameplayText.setTextBounds(0, HEADER_HEIGHT + optionHeight * 1, GAME_WIDTH, optionHeight * 2);
+    menuHelpExitText.events.onInputOver.add(menuTextHoverIn, this);
+    menuHelpExitText.events.onInputOut.add(menuTextHoverOut, this);
+    menuHelpGameplayText.setTextBounds(0, HEADER_HEIGHT + optionHeight * 2, GAME_WIDTH, optionHeight * 4);
     menuHelpGameplayText.wordWrap = true;
     menuHelpGameplayText.wordWrapWidth = GAME_WIDTH - 50;
+
+    menuHelpBricksText.setTextBounds(0, HEADER_HEIGHT + optionHeight * 6, GAME_WIDTH, optionHeight);
+    menuHelpBrick1Text.setTextBounds(GAME_WIDTH / 4 + MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 7, GAME_WIDTH / 4 - MENU_HELP_PADDING, optionHeight);
+    menuHelpBrick2Text.setTextBounds(GAME_WIDTH / 4 + MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 8, GAME_WIDTH / 4 - MENU_HELP_PADDING, optionHeight);
+    menuHelpBrick3Text.setTextBounds(GAME_WIDTH / 4 + MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 9, GAME_WIDTH / 4 - MENU_HELP_PADDING, optionHeight);
+    menuHelpBrick4Text.setTextBounds(GAME_WIDTH / 4 * 3 + MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 7, GAME_WIDTH / 4 - MENU_HELP_PADDING, optionHeight);
+    menuHelpBrick0Text.setTextBounds(GAME_WIDTH / 4 * 3 + MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 8, GAME_WIDTH / 4 - MENU_HELP_PADDING, optionHeight * 2);
+    menuHelpBonusText.setTextBounds(0, HEADER_HEIGHT + optionHeight * 10, GAME_WIDTH, optionHeight);
+    menuHelpCoinText.setTextBounds(GAME_WIDTH / 4 + MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 11, GAME_WIDTH / 4 - MENU_HELP_PADDING, optionHeight);
+    menuHelpLifeText.setTextBounds(GAME_WIDTH / 4 * 3 + MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 11, GAME_WIDTH / 4 - MENU_HELP_PADDING, optionHeight);
+
+    var menuHelpBrick1 = menuHelp.create((GAME_WIDTH / 4) - BRICK_WIDTH - MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 7 + optionHeight / 2 - BRICK_HEIGHT / 2, 'brick_1');
+    menuHelpBrick1.width = BRICK_WIDTH;
+    menuHelpBrick1.height = BRICK_HEIGHT;
+    var menuHelpBrick2 = menuHelp.create((GAME_WIDTH / 4) - BRICK_WIDTH - MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 8 + optionHeight / 2 - BRICK_HEIGHT / 2, 'brick_2');
+    menuHelpBrick2.width = BRICK_WIDTH;
+    menuHelpBrick2.height = BRICK_HEIGHT;
+    var menuHelpBrick3 = menuHelp.create((GAME_WIDTH / 4) - BRICK_WIDTH - MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 9 + optionHeight / 2 - BRICK_HEIGHT / 2, 'brick_3');
+    menuHelpBrick3.width = BRICK_WIDTH;
+    menuHelpBrick3.height = BRICK_HEIGHT;
+    var menuHelpBrick4 = menuHelp.create((GAME_WIDTH / 4) * 3 - BRICK_WIDTH - MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 7 + optionHeight / 2 - BRICK_HEIGHT / 2, 'brick_4');
+    menuHelpBrick4.width = BRICK_WIDTH;
+    menuHelpBrick4.height = BRICK_HEIGHT;
+    var menuHelpBrick0Day = menuHelp.create((GAME_WIDTH / 4) * 3 - BRICK_WIDTH - MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 8 + optionHeight / 2 - BRICK_HEIGHT / 2, 'brick_0_day');
+    menuHelpBrick0Day.width = BRICK_WIDTH;
+    menuHelpBrick0Day.height = BRICK_HEIGHT;
+    var menuHelpBrick0Night = menuHelp.create((GAME_WIDTH / 4) * 3 - BRICK_WIDTH - MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 9 + optionHeight / 2 - BRICK_HEIGHT / 2, 'brick_0_night');
+    menuHelpBrick0Night.width = BRICK_WIDTH;
+    menuHelpBrick0Night.height = BRICK_HEIGHT;
+    var menuHelpCoin = menuHelp.create((GAME_WIDTH / 4) - BRICK_WIDTH + (BRICK_WIDTH - BONUS_WIDTH) / 2 - MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 11 + optionHeight / 2 - BONUS_HEIGHT / 2, 'bonus_0');
+    menuHelpCoin.width = BONUS_WIDTH;
+    menuHelpCoin.height = BONUS_HEIGHT;
+    var menuHelpLife = menuHelp.create((GAME_WIDTH / 4) * 3 - BRICK_WIDTH + (BRICK_WIDTH - BONUS_WIDTH) / 2 - MENU_HELP_PADDING, HEADER_HEIGHT + optionHeight * 11 + optionHeight / 2 - BONUS_HEIGHT / 2, 'bonus_1');
+    menuHelpLife.width = BONUS_WIDTH;
+    menuHelpLife.height = BONUS_HEIGHT;
 }

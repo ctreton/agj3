@@ -23,6 +23,7 @@ const BONUS_HEIGHT = 20;
 const BONUS_VELOCITY_Y = 200;
 const MENU_TEXT_COLOR = "#626262";
 const MENU_TEXT_COLOR_HOVER = "#323232";
+const MENU_HELP_PADDING = 10;
 
 var ball;
 var paddle;
@@ -86,6 +87,15 @@ var menuSettingsResetButtonText;
 var menuHelpTitleText;
 var menuHelpExitText;
 var menuHelpGameplayText;
+var menuHelpBricksText;
+var menuHelpBrick1Text;
+var menuHelpBrick2Text;
+var menuHelpBrick3Text;
+var menuHelpBrick4Text;
+var menuHelpBrick0Text;
+var menuHelpBonusText;
+var menuHelpCoinText;
+var menuHelpLifeText;
 
 function preload() {
     game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');

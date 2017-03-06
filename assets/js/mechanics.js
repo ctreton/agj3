@@ -96,6 +96,8 @@ function handleSpace() {
 function handleEscape() {
     if (settings) {
         exitSettings();
+    } else if (help) {
+        exitHelp();
     } else {
         toggleMenu();
     }
