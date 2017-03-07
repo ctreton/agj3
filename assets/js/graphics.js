@@ -222,7 +222,7 @@ function createMenuHelp() {
 
     menuHelpTitleText = game.add.text(0, 0, 'Help', menuTitleStyle, menuHelp);
     menuHelpExitText = game.add.text(0, 0, 'X', menuTitleStyle, menuHelp);
-    menuHelpGameplayText = game.add.text(0, 0, 'This game is a classic breakout-like game, with the paddle and the ball you have to destroy all the bricks on the screen to pass the level. The difference to classic games is in the day/night mode, if you destroy a switch brick (black or phosphorescent), you switch the mode. Day mode is the normal mode, in night mode you’ll see only switch bricks, bonuses, the ball and the paddle in phosphorescent color.', menuTextStyle, menuHelp);
+    menuHelpGameplayText = game.add.text(0, 0, 'This game is a classic breakout-like game, with the paddle and the ball you have to destroy all the bricks on the screen to pass the level. The difference with classic games is in the day/night mode, if you destroy a switch brick (black or phosphorescent), you switch the mode. Day mode is the normal mode, in night mode you’ll see only switch bricks, bonuses, the ball and the paddle in phosphorescent color.', menuTextStyle, menuHelp);
 
     menuHelpBricksText = game.add.text(0, 0, 'Bricks', menuOptionStyle, menuHelp);
     menuHelpBrick1Text = game.add.text(0, 3, '10pts', menuHelpTextStyle, menuHelp);
