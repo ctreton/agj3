@@ -1,8 +1,8 @@
 
-// const GAME_WIDTH = 800;
-// const GAME_HEIGHT = 600;
-const GAME_WIDTH = window.innerWidth * window.devicePixelRatio;
-const GAME_HEIGHT = window.innerHeight * window.devicePixelRatio;
+const GAME_WIDTH = 800;
+const GAME_HEIGHT = 600;
+// const GAME_WIDTH = window.innerWidth * window.devicePixelRatio;
+// const GAME_HEIGHT = window.innerHeight * window.devicePixelRatio;
 const BALL_SIZE = GAME_WIDTH / 50;
 const PADDLE_WIDTH = GAME_WIDTH / 16;
 const PADDLE_HEIGHT = GAME_HEIGHT / 50;
