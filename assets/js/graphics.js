@@ -95,6 +95,8 @@ function refreshLives() {
 
 function createMenuHome() {
     menuHomeBack = menuHome.create(0, 0, 'background_day');
+    menuHomeBack.width = GAME_WIDTH;
+    menuHomeBack.height = GAME_HEIGHT;
     menuHomeTitleText = game.add.text(0, 0, 'Akeneo Game Jam #3', menuTitleStyle, menuHome);
     menuHomeNewText = game.add.text(0, 0, 'New game', menuOptionStyle, menuHome);
     menuHomeResumeText = game.add.text(0, 0, 'Resume game', menuOptionStyle, menuHome);
@@ -134,6 +136,8 @@ function menuTextHoverOut(_text) {
 
 function createMenuSettings() {
     menuSettingsBack = menuSettings.create(0, 0, 'background_day');
+    menuSettingsBack.width = GAME_WIDTH;
+    menuSettingsBack.height = GAME_HEIGHT;
 
     var optionHeight = (GAME_HEIGHT - (HEADER_HEIGHT + FOOTER_HEIGHT)) / 6;
 
@@ -217,6 +221,8 @@ function createMenuSettings() {
 
 function createMenuHelp() {
     menuHelpBack = menuHelp.create(0, 0, 'background_day');
+    menuHelpBack.width = GAME_WIDTH;
+    menuHelpBack.height = GAME_HEIGHT;
 
     var optionHeight = (GAME_HEIGHT - (HEADER_HEIGHT + FOOTER_HEIGHT)) / 12;
 
