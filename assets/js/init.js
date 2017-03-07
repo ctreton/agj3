@@ -1,7 +1,9 @@
 function initGame() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.checkCollision.down = false;
-    s = game.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, 'background_day');
+    s = game.add.sprite(0, 0, 'background_day');
+    s.width = GAME_WIDTH;
+    s.height = GAME_HEIGHT;
 
     bricks = game.add.group();
     bricks.enableBody = true;
