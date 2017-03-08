@@ -186,12 +186,12 @@ function createMenuSettings() {
     menuSettingsSpeedButton.events.onDragStop.add(setSpeedPosition, this);
 
     menuSettingsSpeedButtonLine = game.add.graphics(0, 0, menuSettings);
-    menuSettingsSpeedButtonLine.lineStyle(2, 0x626262, 1);
-    menuSettingsSpeedButtonLine.beginFill(0x626262, 1);
+    menuSettingsSpeedButtonLine.lineStyle(2, MENU_TEXT_COLOR_HEX, 1);
+    menuSettingsSpeedButtonLine.beginFill(MENU_TEXT_COLOR_HEX, 1);
     menuSettingsSpeedButtonLine.moveTo(GAME_WIDTH / 2 + SELECTOR_WIDTH / 2 + 100, HEADER_HEIGHT + optionHeight * 2 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
     menuSettingsSpeedButtonLine.lineTo(GAME_WIDTH / 4 * 3 - SELECTOR_WIDTH / 2 + 100, HEADER_HEIGHT + optionHeight * 2 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
     menuSettingsSpeedButtonLine.endFill();
-    menuSettingsSpeedButtonLine.beginFill(0x626262, 1);
+    menuSettingsSpeedButtonLine.beginFill(MENU_TEXT_COLOR_HEX, 1);
     menuSettingsSpeedButtonLine.moveTo(GAME_WIDTH / 2 + GAME_WIDTH / 8 + 100, HEADER_HEIGHT + optionHeight * 2 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
     menuSettingsSpeedButtonLine.lineTo(GAME_WIDTH / 2 + GAME_WIDTH / 8 + 100, (HEADER_HEIGHT + optionHeight * 2 + (optionHeight / 2 - SELECTOR_HEIGHT / 2)) - 5);
     menuSettingsSpeedButtonLine.endFill();
@@ -208,12 +208,12 @@ function createMenuSettings() {
     menuSettingsSensButton.events.onDragStop.add(setSensPosition, this);
 
     menuSettingsSensButtonLine = game.add.graphics(0, 0, menuSettings);
-    menuSettingsSensButtonLine.lineStyle(2, 0x626262, 1);
-    menuSettingsSensButtonLine.beginFill(0x626262, 1);
+    menuSettingsSensButtonLine.lineStyle(2, MENU_TEXT_COLOR_HEX, 1);
+    menuSettingsSensButtonLine.beginFill(MENU_TEXT_COLOR_HEX, 1);
     menuSettingsSensButtonLine.moveTo(GAME_WIDTH / 2 + SELECTOR_WIDTH / 2 + 100, HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
     menuSettingsSensButtonLine.lineTo(GAME_WIDTH / 4 * 3 - SELECTOR_WIDTH / 2 + 100, HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
     menuSettingsSensButtonLine.endFill();
-    menuSettingsSensButtonLine.beginFill(0x626262, 1);
+    menuSettingsSensButtonLine.beginFill(MENU_TEXT_COLOR_HEX, 1);
     menuSettingsSensButtonLine.moveTo(GAME_WIDTH / 2 + GAME_WIDTH / 8 + 100, HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2));
     menuSettingsSensButtonLine.lineTo(GAME_WIDTH / 2 + GAME_WIDTH / 8 + 100, (HEADER_HEIGHT + optionHeight * 4 + (optionHeight / 2 - SELECTOR_HEIGHT / 2)) - 5);
     menuSettingsSensButtonLine.endFill();
