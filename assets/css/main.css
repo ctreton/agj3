@@ -1,7 +1,4 @@
-/*#agj3game canvas {
-  cursor: none;
-}*/
-#agj3builder canvas {
+canvas {
   margin: 50px auto;
 }
 textarea {

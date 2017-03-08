@@ -138,7 +138,6 @@ function ballHitBrick(_ball, _brick) {
         ball.body.velocity.set(0);
         ball.x = paddle.body.x;
         ball.y = paddle.y - BALL_SIZE;
-        ball.animations.stop();
 
         enableDay();
 

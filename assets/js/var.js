@@ -24,8 +24,9 @@ const HEADER_HEIGHT = GAME_HEIGHT / 12;
 const KEY_SENS = 8;
 const BALL_SPEED = -300;
 const FONT = "Chewy";
-const MENU_TEXT_COLOR = "#626262";
-const MENU_TEXT_COLOR_HOVER = "#323232";
+const MENU_TEXT_COLOR = "#66279C";
+const MENU_TEXT_COLOR_HEX = parseInt(MENU_TEXT_COLOR.replace("#", "0x"), 16);
+const MENU_TEXT_COLOR_HOVER = "#9452BA";
 const MENU_HELP_PADDING = GAME_WIDTH / 80;
 
 var ball;
@@ -117,7 +118,7 @@ function preload() {
     game.load.image('ball_night', 'assets/graphics/ball_night.png');
     game.load.image('bonus_0', 'assets/graphics/bonus_0.png');
     game.load.image('bonus_1', 'assets/graphics/bonus_1.png');
-    game.load.image('selector', 'assets/graphics/selector.png');
+    game.load.image('selector', 'assets/graphics/selector_p.png');
     game.load.audio('buttonSound', 'assets/audio/button.mp3');
     game.load.audio('brickSound', 'assets/audio/hit_brick.mp3');
     game.load.audio('paddleSound', 'assets/audio/hit_paddle.mp3');
