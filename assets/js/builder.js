@@ -7,7 +7,7 @@ const GRID_WIDTH = 800;
 const GRID_HEIGHT = 400;
 const FOOTER_HEIGHT = 50;
 
-var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'agj3builder', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'breakingnightbuilder', { preload: preload, create: create, update: update });
 
 function preload() {
     game.load.image('background', 'assets/graphics/background_day.jpg');
