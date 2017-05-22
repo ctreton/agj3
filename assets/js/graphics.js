@@ -97,7 +97,7 @@ function createMenuHome() {
     menuHomeBack = menuHome.create(0, 0, 'background_day');
     menuHomeBack.width = GAME_WIDTH;
     menuHomeBack.height = GAME_HEIGHT;
-    menuHomeTitleText = game.add.text(0, 0, 'Akeneo Game Jam #3', menuTitleStyle, menuHome);
+    menuHomeTitleText = game.add.text(0, 0, 'Breaking Night', menuTitleStyle, menuHome);
     menuHomeNewText = game.add.text(0, 0, 'New game', menuOptionStyle, menuHome);
     menuHomeResumeText = game.add.text(0, 0, 'Resume game', menuOptionStyle, menuHome);
     menuHomeSettingsText = game.add.text(0, 0, 'Settings', menuOptionStyle, menuHome);
